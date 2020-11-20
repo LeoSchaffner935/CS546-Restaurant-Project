@@ -35,7 +35,6 @@ const exportedMethods = {
             password: password, // TODO: Encrypt password
             bio: bio,
             profilePic: profilePic,
-            isOwner: false, // This privalege can be only enabled by admins
             reviews: [],
             comments: []
         };
@@ -60,7 +59,6 @@ const exportedMethods = {
           password: updatedUser.password,
           bio: updatedUser.bio,
           profilePic: updatedUser.profilePic,
-          isOwner: updateUser.isOwner,
           reviews: user.reviews,
           comments: user.comments
         };

@@ -22,8 +22,9 @@ const exportedMethods = {
     },
 
     async add(username, firstName, lastName, email, password, bio, profilePic) {
-        // TODO: Error Checking
+        // TODO: Error Checking?
         //       Get default profile pic, use as default if not provided
+        //       See GridFS, Mongoose, HTML (type="image") for uploading image to server and storing here
         
         const userCollection = await users();
 
@@ -32,7 +33,7 @@ const exportedMethods = {
             firstName: firstName,
             lastName: lastName,
             email: email,
-            password: password, // TODO: Encrypt password
+            password: password,
             bio: bio,
             profilePic: profilePic,
             reviews: [],

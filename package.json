@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/LeoSchaffner935/CS546-Restaurant-Project/issues"
   },
-  "homepage": "https://github.com/LeoSchaffner935/CS546-Restaurant-Project#readme"
+  "homepage": "https://github.com/LeoSchaffner935/CS546-Restaurant-Project#readme",
+  "dependencies": {
+    "email-validator": "^2.0.4",
+    "mongodb": "^3.6.3"
+  }
 }

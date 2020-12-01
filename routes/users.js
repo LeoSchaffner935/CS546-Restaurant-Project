@@ -29,7 +29,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/get: Missing Input Field!';
+        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/post: Missing Input Field!';
         
         if (typeof req.body.username !== "string") throw "Routes/Users.js/post: Username must be a string!";
         if (typeof req.body.firstName !== "string") throw "Routes/Users.js/post: FirstName must be a string!";
@@ -73,7 +73,25 @@ router.put('/:id', async (req, res) => {
         }
         if (!bool) throw 'Routes/Users.js/put: Id does not exist!'
         
-        // req.body Error Checking
+        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/put: Missing Input Field!';
+        
+        if (typeof req.body.username !== "string") throw "Routes/Users.js/put: Username must be a string!";
+        if (typeof req.body.firstName !== "string") throw "Routes/Users.js/put: FirstName must be a string!";
+        if (typeof req.body.lastName !== "string") throw "Routes/Users.js/put: LastName must be a string!";
+        if (typeof req.body.email !== "string") throw "Routes/Users.js/put: Email must be a string!";
+        if (typeof req.body.hashedPassword !== "string") throw "Routes/Users.js/put: HashedPassword must be a string!";
+        if (typeof req.body.bio !== "string") throw "Routes/Users.js/put: Bio must be a string!";
+        // Profile Pic
+
+        if (!req.body.username.trim()) throw "Routes/Users.js/put: Username cannot be empty!";
+        if (!req.body.firstName.trim()) throw "Routes/Users.js/put: FirstName cannot be empty!";
+        if (!req.body.lastName.trim()) throw "Routes/Users.js/put: LastName cannot be empty!";
+        if (!req.body.email.trim()) throw "Routes/Users.js/put: Email cannot be empty!";
+        if (!req.body.hashedPassword.trim()) throw "Routes/Users.js/put: HashedPassword cannot be empty!";
+        if (!req.body.bio.trim()) throw "Routes/Users.js/put: Bio cannot be empty!";
+        // Profile Pic
+
+        if (!emailValidator.validate(email)) throw "Routes/Users.js/put: Email must be valid!"; // Validate Email
 
         const user = await userData.update(req.params.id);
 

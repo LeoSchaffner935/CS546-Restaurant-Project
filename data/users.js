@@ -1,7 +1,6 @@
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 const {ObjectId} = require("mongodb");
-const emailValidator = require("email-validator");
 
 const exportedMethods = {
     async getById(id) {
@@ -43,8 +42,6 @@ const exportedMethods = {
         if (!hashedPassword.trim()) throw "Data/Users.js/add: HashedPassword cannot be empty!";
         if (!bio.trim()) throw "Data/Users.js/add: Bio cannot be empty!";
         // Profile Pic
-
-        if (!emailValidator.validate(email)) throw "Data/Users.js/add: Email must be valid!"; // Validate Email
 
         const userCollection = await users();
 

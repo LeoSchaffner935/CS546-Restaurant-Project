@@ -4,7 +4,7 @@ const reviewData = require('./reviews');
 const commentData = require('./comments');
 
 module.exports = {
-  books: bookData,
+  users: userData,
   restaurants: restaurantData,
   reviews: reviewData,
   comments: commentData

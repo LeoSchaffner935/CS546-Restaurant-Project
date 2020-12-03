@@ -26,7 +26,9 @@ router.get('/:id', async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             bio: user.bio,
-            profilePic: user.profilePic
+            profilePic: user.profilePic,
+            reviews: user.reviews,
+            comments: user.comments
         });
     } catch(e) {
         res.status(400).json(e);

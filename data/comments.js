@@ -21,7 +21,7 @@ const exportedMethods = {
         return allComments;
       },
     //Find a specific comment by its id
-    async getReviewById(id) {
+    async getCommentById(id) {
         if (!id) {
             throw 'No id provided';
         }

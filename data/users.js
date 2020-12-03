@@ -26,14 +26,6 @@ const exportedMethods = {
         //       See GridFS, Mongoose, HTML (type="image") for uploading image to server and storing here
 
         if (!username || !firstName || !lastName || !email || !hashedPassword || !bio || !profilePic) throw "Data Users.js: Missing Input Field!";
-        
-        if (typeof username !== "string") throw "Data/Users.js/add: Username must be a string!";
-        if (typeof firstName !== "string") throw "Data/Users.js/add: FirstName must be a string!";
-        if (typeof lastName !== "string") throw "Data/Users.js/add: LastName must be a string!";
-        if (typeof email !== "string") throw "Data/Users.js/add: Email must be a string!";
-        if (typeof hashedPassword !== "string") throw "Data/Users.js/add: HashedPassword must be a string!";
-        if (typeof bio !== "string") throw "Data/Users.js/add: Bio must be a string!";
-        // Profile Pic
 
         if (!username.trim()) throw "Data/Users.js/add: Username cannot be empty!";
         if (!firstName.trim()) throw "Data/Users.js/add: FirstName cannot be empty!";

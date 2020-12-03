@@ -18,6 +18,6 @@
   },
   "homepage": "https://github.com/LeoSchaffner935/CS546-Restaurant-Project#readme",
   "dependencies": {
-    "mongodb": "^3.6.3"
+    "email-validator": "^2.0.4"
   }
 }

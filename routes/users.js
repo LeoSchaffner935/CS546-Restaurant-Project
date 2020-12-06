@@ -5,21 +5,10 @@ const userData = data.users;
 const bcrypt = require('bcrypt');
 const emailValidator = require("email-validator");
 
-router.get('/:id', async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
-        if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/get: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/get: Id does not exist!'
-
-        const user = await userData.getById(req.params.id);
+        // Check Format of Username
+        const user = await userData.getByUsername(req.params.username.toLowerCase());
 
         res.render('user', {
             username: user.username,
@@ -31,7 +20,7 @@ router.get('/:id', async (req, res) => {
             comments: user.comments
         });
     } catch(e) {
-        res.status(400).json(e);
+        res.status(404).json(e);
     }
 });
 
@@ -54,7 +43,7 @@ router.post('/', async (req, res) => {
 
         const user = await userData.add(req.body.username, req.body.firstName, req.body.lastName, req.body.email, hashedPassword, req.body.bio, req.body.profilePic);
 
-        res.redirect('../private');
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -63,16 +52,6 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/put: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/put: Id does not exist!'
         
         if (!req.body) throw 'Routes/Users.js/put: You must provide data to update a user!';
         if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/put: Missing Input Field!';
@@ -99,7 +78,7 @@ router.put('/:id', async (req, res) => {
             profilePic: req.body.profilePic
         });
 
-        res.redirect('../private');
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -108,16 +87,6 @@ router.put('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/patch: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/patch: Id does not exist!'
         
         if (!req.body) throw 'Routes/Users.js/post: You must provide data to create a user!';
         let updatedObject = {};
@@ -153,7 +122,7 @@ router.patch('/:id', async (req, res) => {
 
         const user = await userData.update(req.params.id, updatedObject);
 
-        res.redirect('../private');
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -162,20 +131,10 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/delete: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/delete: Id does not exist!'
 
         const user = await userData.delete(req.params.id);
 
-        // Send to Page
+        res.send("<h2>Account has successfully been deleted!</h2>");
     } catch(e) {
         res.status(400).json(e);
     }

@@ -1,6 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
 const comments = mongoCollections.comments;
 const reviews = require('./reviews');
+const users = require('./users');
 let { ObjectId } = require('mongodb');
 
 
@@ -67,8 +68,8 @@ const exportedMethods = {
         const newId = (newInsertInformation.insertedId).toString();
         
         await reviews.addCommentToReview(reviewId, newId);
-    
-        return await this.getCommentById(newId);
+        await users.addCommentToUser(commenter, newId);
+
       },
       //Remove a comment
       async removeComment(id) {
@@ -89,7 +90,9 @@ const exportedMethods = {
         const allComments = await comments();
         const removeIt = await this.getCommentsById(id);
 
-        await books.removeCommentFromReview(removeIt.reviewId, id);
+        await reviews.removeCommentFromReview(removeIt.reviewId, id);
+        await users.removeCommentFromUser(removeIt.commenter, id);
+
 
         const commentInfo = await allComments.removeOne({ _id: parsedId});
         if (commentInfo.deletedCount == 0)

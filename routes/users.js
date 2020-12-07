@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const userData = data.users;
+const reviewData = data.reviews;
+const commentData = data.comments;
 const bcrypt = require('bcrypt');
 const emailValidator = require("email-validator");
 
@@ -10,14 +12,24 @@ router.get('/:username', async (req, res) => {
         // Check Format of Username
         const user = await userData.getByUsername(req.params.username.toLowerCase());
 
+        let fullReviews = [];
+        user.reviews.forEach(r => {
+            fullReviews.append(reviewData.getReviewById(r));
+        });
+
+        let fullComments = [];
+        user.comments.forEach(c => {
+            fullComments.append(commentData.getCommentById(c));
+        });
+
         res.render('user', {
             username: user.username,
             firstName: user.firstName,
             lastName: user.lastName,
             bio: user.bio,
             profilePic: user.profilePic,
-            reviews: user.reviews,
-            comments: user.comments
+            reviews: fullReviews,
+            comments: fullComments
         });
     } catch(e) {
         res.status(404).json(e);

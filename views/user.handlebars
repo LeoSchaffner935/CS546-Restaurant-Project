@@ -1,0 +1,45 @@
+<div id="userInfo">
+    <h1>{{username}}</h1>
+    <!-- Profile Pic -->
+    <p>{{firstName}} {{lastName}}</p>
+    <p>Bio: {{bio}}</p>
+    <div id="userReviews">Reviews
+        {{#each reviews}}
+            <dl id="userReview">
+                <dt>Title</dt>
+                <dd>{{this.title}}</dd>
+
+                <dt>Restaurant</dt>
+                <dd>{{this.restaurantReviewed}}</dd> <!-- Add link to restaurant -->
+
+                <dt>Rating</dt>
+                <dd>{{this.rating}}</dd>
+
+                <dt>Date</dt>
+                <dd>{{this.dateOfReview}}</dd>
+
+                <dt>Tags</dt>
+                <dd><ul></ul></dd>
+                {{#each this.tags}}
+                    <li>{{this}}</li>
+                {{/each}}
+
+                <p>{{this.content}}</p>
+            </dl>
+        {{/each}}
+    </div>
+    <div id="userComments">Comments
+        {{#each comments}}
+            <dl id="userComment">
+                <dt>Date</dt>
+                <dd>{{this.date}}</dd>
+
+                <dt>Comment</dt>
+                <dd>{{this.comment}}</dd>
+
+                <dt>Go To Review</dt>
+                <dd><a src="/reviews/{{this.reviewId}}"></a></dd>
+            </dl>
+        {{/each}}
+    </div>
+</div>

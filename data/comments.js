@@ -70,7 +70,6 @@ const exportedMethods = {
         await reviews.addCommentToReview(reviewId, newId);
         await users.addCommentToUser(commenter, newId);
 
-        return await this.getCommentById(newId);
       },
       //Remove a comment
       async removeComment(id) {
@@ -93,6 +92,7 @@ const exportedMethods = {
 
         await reviews.removeCommentFromReview(removeIt.reviewId, id);
         await users.removeCommentFromUser(removeIt.commenter, id);
+
 
         const commentInfo = await allComments.removeOne({ _id: parsedId});
         if (commentInfo.deletedCount == 0)

@@ -11,6 +11,10 @@ const constructorMethod = (app) => {
   app.use('/private', privateRoutes);
   app.use('/login', loginRoutes);
 
+  app.get('/signup', (req, res) => {
+    res.render('signup');
+  });
+
   app.use('*', (req, res) => {
     res.sendStatus(404);
   });

@@ -2,28 +2,37 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const userData = data.users;
+const reviewData = data.reviews;
+const commentData = data.comments;
 const bcrypt = require('bcrypt');
 const emailValidator = require("email-validator");
 
-router.get('/:id', async (req, res) => {
+router.get('/:username', async (req, res) => {
     try {
-        if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/get: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/get: Id does not exist!'
+        // Check Format of Username
+        const user = await userData.getByUsername(req.params.username.toLowerCase());
 
-        const user = await userData.getById(req.params.id);
+        let fullReviews = [];
+        user.reviews.forEach(r => {
+            fullReviews.append(reviewData.getReviewById(r));
+        });
 
-        // Send to Page
+        let fullComments = [];
+        user.comments.forEach(c => {
+            fullComments.append(commentData.getCommentById(c));
+        });
+
+        res.render('user', {
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            bio: user.bio,
+            profilePic: user.profilePic,
+            reviews: fullReviews,
+            comments: fullComments
+        });
     } catch(e) {
-        res.status(400).json(e);
+        res.status(404).json(e);
     }
 });
 
@@ -42,11 +51,11 @@ router.post('/', async (req, res) => {
 
         if (!emailValidator.validate(req.body.email)) throw "Routes/Users.js/post: Email must be valid!"; // Validate Email
 
-        // Hash Password
+        const hashedPassword = await bcrypt.hash(plainTextPassword, 16); // Hash Password
 
-        const user = await userData.add(req.body);
+        const user = await userData.add(req.body.username, req.body.firstName, req.body.lastName, req.body.email, hashedPassword, req.body.bio, req.body.profilePic);
 
-        // Send to Page
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -56,20 +65,9 @@ router.put('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/put: Id must be a number!';
         
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/put: Id does not exist!'
-        
         if (!req.body) throw 'Routes/Users.js/put: You must provide data to update a user!';
         if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/put: Missing Input Field!';
         
-
         if (!req.body.username.trim()) throw "Routes/Users.js/put: Username cannot be empty!";
         if (!req.body.firstName.trim()) throw "Routes/Users.js/put: FirstName cannot be empty!";
         if (!req.body.lastName.trim()) throw "Routes/Users.js/put: LastName cannot be empty!";
@@ -80,11 +78,19 @@ router.put('/:id', async (req, res) => {
 
         if (!emailValidator.validate(email)) throw "Routes/Users.js/put: Email must be valid!";
 
-        // Hash Password
+        const hashedPassword = await bcrypt.hash(req.body.password, 16);
 
-        const user = await userData.update(req.params.id, req.body);
+        const user = await userData.update(req.params.id, {
+            username: req.body.username,
+            firstName = req.body.firstName,
+            lastName = req.body.lastName,
+            email: req.body.lastName,
+            hashedPassword: hashedPassword,
+            bio: req.body.bio,
+            profilePic: req.body.profilePic
+        });
 
-        // Send to Page
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -93,16 +99,6 @@ router.put('/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/patch: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/patch: Id does not exist!'
         
         if (!req.body) throw 'Routes/Users.js/post: You must provide data to create a user!';
         let updatedObject = {};
@@ -129,12 +125,16 @@ router.patch('/:id', async (req, res) => {
             if (!req.body.bio.trim()) throw 'Routes/Users.js/patch: Bio cannot be empty!';
             updatedObject.bio = req.body.bio;
         }
-        // Password
+        const bcryptBool = bcrypt.compare(req.body.password, oldUser.hashedPassword)
+        if (req.body.password && !bcryptBool) {
+            if (!req.body.password.trim()) throw 'Routes/Users.js/patch: Password cannot be empty!';
+            updatedObject.hashedPassword = await bcrypt.hash(req.body.password, 16);
+        }
         // Profile Pic
 
         const user = await userData.update(req.params.id, updatedObject);
 
-        // Send to Page
+        res.redirect('/private');
     } catch(e) {
         res.status(400).json(e);
     }
@@ -143,20 +143,10 @@ router.patch('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/delete: Id must be a number!';
-        
-        const users = await userData.getAll();
-        let bool = false;
-        for (let i=0; i<users.lenth; i++) {
-            if (parseInt(req.params.id) === users[i]._id.toString()) {
-                bool = true;
-                break;
-            }
-        }
-        if (!bool) throw 'Routes/Users.js/delete: Id does not exist!'
 
         const user = await userData.delete(req.params.id);
 
-        // Send to Page
+        res.send("<h2>Account has successfully been deleted!</h2>");
     } catch(e) {
         res.status(400).json(e);
     }

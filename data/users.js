@@ -14,11 +14,14 @@ const exportedMethods = {
         return user;
     },
 
-    async getAll() {
-        const userCollection = await users();
-        const userList = await userCollection.find({}).toArray();
-        if (!userList) throw 'Data/Users.js/getAll: No users in system!';
-        return userList;
+    async getByUsername(username) {
+      if (!username) throw 'Data/Users.js/getByUsername: You must provide a username to search for!';
+      if (typeof username !== "string") throw 'Data/Users.js/getByUsername: Username needs to be a string!';
+  
+      const userCollection = await users();
+      const user = await userCollection.findOne({ username: username });
+      if (!user) throw 'Data/Users.js/getByUsername: User not found!';
+      return user;
     },
 
     async add(username, firstName, lastName, email, hashedPassword, bio, profilePic) {
@@ -51,7 +54,7 @@ const exportedMethods = {
     
         const newInsertInformation = await userCollection.insertOne(newUser);
         if (newInsertInformation.insertedCount === 0) throw 'Data/Users.js/add: Insert failed!';
-        return await this.readById(newInsertInformation.insertedId.toString());
+        return await this.getById(newInsertInformation.insertedId.toString());
     },
 
     async update(id, updatedUser) {
@@ -59,7 +62,7 @@ const exportedMethods = {
         if (typeof id !== "string") throw 'Data/Users.js/update: ID needs to be a string!';
         const parsedId = ObjectId(id);
     
-        const user = await this.readById(id);
+        const user = await this.getById(id);
 
         const userUpdateInfo = {
           username: updatedUser.username,
@@ -80,7 +83,7 @@ const exportedMethods = {
         );
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/update: Update failed!';
 
-        return await this.readById(id.toString());
+        return await this.getById(id.toString());
     },
 
     async addReviewToUser(userId, reviewId) {
@@ -99,7 +102,7 @@ const exportedMethods = {
     
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/addReviewToUser: Update failed!';
 
-        return await this.readById(userId);
+        return await this.getById(userId);
     },
 
     async addCommentToUser(userId, commentId) {
@@ -118,7 +121,7 @@ const exportedMethods = {
     
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/addCommentToUser: Update failed!';
 
-        return await this.readById(userId);
+        return await this.getById(userId);
     },
 
     async delete(id) {
@@ -148,7 +151,7 @@ const exportedMethods = {
         );
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/removeReviewFromUser: Update failed!';
 
-        return await this.readById(userId);
+        return await this.getById(userId);
     },
 
     async removeCommentFromUser(userId, commentId) {
@@ -166,7 +169,7 @@ const exportedMethods = {
         );
         if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/removeCommentFromUser: Update failed!';
 
-        return await this.readById(userId);
+        return await this.getById(userId);
     }
 }
 

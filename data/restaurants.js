@@ -9,7 +9,7 @@ async function getAllRestaurants() {
 
 async function getRestaurantById(id) {
     if (!id) throw 'id cannot be undefined';
-    if (typeof id !== string) throw 'id must be of type string';
+    if (typeof id !== "string") throw 'id must be of type string';
     const parsedId = ObjectId(id);
     const restaurantsCollection = await restaurants();
     const restaurant = await restaurantsCollection.findOne({ _id: parsedId });
@@ -20,23 +20,10 @@ async function getRestaurantById(id) {
 
 async function addRestaurant(restaurant) {
     validateRestaurant(restaurant);
-    let newRestaurant = {
-        name: restaurant.name,
-        owner: restaurant.owner,
-        categories: restaurant.categories,
-        rating: 0,
-        reviews: [],
-        featuredItems: restaurant.featuredItems,
-        menu: restaurant.menu,
-        serviceModes: restaurant.serviceModes,
-        location: restaurant.location,
-        nearByRestaurants: [],
-        hours: {},
-        frequentTags: []
-    };
     const restaurantsCollection = await restaurants();
-    const insertInfo = await restaurantsCollection.insertOne(newRestaurant);
+    const insertInfo = await restaurantsCollection.insertOne(restaurant);
     if (insertInfo.insertedCount === 0) throw 'Insertion failed!';
+    // TODO calculate nearByRestaurants after saving to DB in one of the layers
     return await this.getRestaurantById(insertInfo.insertedId.toString());
 }
 
@@ -49,7 +36,7 @@ function validateRestaurant(restaurant) {
     if (!restaurant.menu || typeof restaurant.menu !== "string" || !restaurant.menu.trim()) throw 'Invalid menu link';
     if (!restaurant.owner || typeof restaurant.owner !== "string" || !restaurant.owner.trim()) throw 'Invalid email address';
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(owner).toLowerCase())) {
+    if (!re.test(String(restaurant.owner).toLowerCase())) {
         throw 'Invalid email address format';
     }
     if (!restaurant.categories || !Array.isArray(restaurant.categories)) throw 'Invalid categories';
@@ -78,7 +65,7 @@ function validateRestaurant(restaurant) {
     }
     if (!restaurant.hours || typeof restaurant.hours !== "object") throw 'Invalid hours';
     for (const key of Object.keys(restaurant.hours)) {
-        if (!allowedDays.includes(restaurant.hours[key])) throw 'Invalid day of the week';
+        if (!allowedDays.includes(key)) throw 'Invalid day of the week';
         // specify formatting for hours from UI
     }
 }
@@ -98,7 +85,7 @@ async function removeRestaurant(id) {
     if (deletionInfo.deletedCount === 0) throw 'Deletion failed!';
 }
 
-async function addReviewToRestaueant(restaurantId, reviewId) {
+async function addReviewToRestaurant(restaurantId, reviewId) {
     if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
     if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
     let parsedId = ObjectId(restaurantId);
@@ -116,4 +103,4 @@ async function removeReviewFromRestaurant(restaurantId, reviewId) {
     if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
 }
 
-module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaueant, removeReviewFromRestaurant }
+module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaurant, removeReviewFromRestaurant }

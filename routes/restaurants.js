@@ -129,14 +129,28 @@ router.post('/', async (req, res) => {
         return;
     }
     for (const key of Object.keys(restaurant.hours)) {
-        if (!allowedDays.includes(restaurant.hours[key])) {
+        if (!allowedDays.includes(key)) {
             res.status(400).json({ error: 'unknown day passed in hours' });
             return;
         }
         // specify formatting for hours from UI
     }
+    let newRestaurant = {
+        name: restaurant.name,
+        owner: restaurant.owner,
+        categories: restaurant.categories,
+        rating: 0,
+        reviews: [],
+        featuredItems: restaurant.featuredItems,
+        menu: restaurant.menu,
+        serviceModes: restaurant.serviceModes,
+        location: restaurant.location,
+        nearByRestaurants: [],
+        hours: {},
+        frequentTags: []
+    };
     try {
-        const newRestaurant = await restaurantData.addRestaurant(restaurant);
+        newRestaurant = await restaurantData.addRestaurant(newRestaurant);
         res.json(newRestaurant);
     } catch (e) {
         res.sendStatus(500).json({ error: 'Insertion failed!' });

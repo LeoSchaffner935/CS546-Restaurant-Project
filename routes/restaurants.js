@@ -14,14 +14,14 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     if (!req.params.id) {
-        res.status(404).json({ error: 'Restaurant not found with given id' });
+        res.status(400).json({ error: 'You must Supply an ID to get' });
         return;
     }
     let id;
     try {
         id = ObjectId(req.params.id);
     } catch (e) {
-        res.status(400).json({ error: 'id is an invalid ObjectId!' });
+        res.status(404).json({ error: 'id is an invalid ObjectId!' });
     }
     try {
         const restaurant = await restaurantData.getRestaurantById(id);

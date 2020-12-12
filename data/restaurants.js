@@ -37,6 +37,7 @@ async function addRestaurant(restaurant) {
     const restaurantsCollection = await restaurants();
     const insertInfo = await restaurantsCollection.insertOne(newRestaurant);
     if (insertInfo.insertedCount === 0) throw 'Insertion failed!';
+    // TODO calculate nearByRestaurants after saving to DB in one of the layers
     return await this.getRestaurantById(insertInfo.insertedId.toString());
 }
 
@@ -49,7 +50,7 @@ function validateRestaurant(restaurant) {
     if (!restaurant.menu || typeof restaurant.menu !== "string" || !restaurant.menu.trim()) throw 'Invalid menu link';
     if (!restaurant.owner || typeof restaurant.owner !== "string" || !restaurant.owner.trim()) throw 'Invalid email address';
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (!re.test(String(owner).toLowerCase())) {
+    if (!re.test(String(restaurant.owner).toLowerCase())) {
         throw 'Invalid email address format';
     }
     if (!restaurant.categories || !Array.isArray(restaurant.categories)) throw 'Invalid categories';
@@ -98,7 +99,7 @@ async function removeRestaurant(id) {
     if (deletionInfo.deletedCount === 0) throw 'Deletion failed!';
 }
 
-async function addReviewToRestaueant(restaurantId, reviewId) {
+async function addReviewToRestaurant(restaurantId, reviewId) {
     if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
     if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
     let parsedId = ObjectId(restaurantId);
@@ -116,4 +117,4 @@ async function removeReviewFromRestaurant(restaurantId, reviewId) {
     if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
 }
 
-module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaueant, removeReviewFromRestaurant }
+module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaurant, removeReviewFromRestaurant }

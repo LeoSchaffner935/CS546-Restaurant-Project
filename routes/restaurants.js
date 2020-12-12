@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an ID to get' });
+        res.status(404).json({ error: 'Restaurant not found with given id' });
         return;
     }
     let id;

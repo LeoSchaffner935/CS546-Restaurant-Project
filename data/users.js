@@ -28,7 +28,7 @@ const exportedMethods = {
         // TODO: Get default profile pic, use as default if not provided
         //       See GridFS, Mongoose, HTML (type="image") for uploading image to server and storing here
 
-        if (!username || !firstName || !lastName || !email || !hashedPassword || !bio || !profilePic) throw "Data Users.js: Missing Input Field!";
+        if (!username || !firstName || !lastName || !email || !hashedPassword || !bio) throw "Data Users.js: Missing Input Field!";
 
         if (!username.trim()) throw "Data/Users.js/add: Username cannot be empty!";
         if (!firstName.trim()) throw "Data/Users.js/add: FirstName cannot be empty!";

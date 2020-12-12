@@ -12,6 +12,12 @@
                 <a href="/signup">Signup</a>
 
                 <!-- Add Search Bar Here -->
+                <form id="searchForm" action="/search" method="POST">
+                    <label>Search
+                        <input id="searchTerm" name="searchTerm" type="text" placeholder="Search here...">
+                    </label>
+                    <button type="submit">Search</button>
+                </form>
             </div>
         </header>
         <main>{{{body}}}</main>

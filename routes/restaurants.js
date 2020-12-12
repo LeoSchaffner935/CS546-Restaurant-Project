@@ -6,7 +6,9 @@ const restaurantData = data.restaurants;
 router.get('/', async (req, res) => {
     try {
         const allRestaurants = await restaurantData.getAllRestaurants();
-        res.json(allRestaurants);
+        res.render('restaurants', {
+            restaurants: allRestaurants
+        });
     } catch (e) {
         res.status(500).json({ error: 'Error occured while fetching restaurant!' });
     }
@@ -25,7 +27,9 @@ router.get('/:id', async (req, res) => {
     }
     try {
         const restaurant = await restaurantData.getRestaurantById(id);
-        res.json(restaurant);
+        res.render('restaurant', {
+            restaurant: restaurant
+        });
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
     }
@@ -151,7 +155,9 @@ router.post('/', async (req, res) => {
     };
     try {
         newRestaurant = await restaurantData.addRestaurant(newRestaurant);
-        res.json(newRestaurant);
+        res.render('restaurant', {
+            restaurant: newRestaurant
+        });
     } catch (e) {
         res.sendStatus(500).json({ error: 'Insertion failed!' });
     }

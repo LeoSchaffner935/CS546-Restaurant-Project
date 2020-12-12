@@ -98,4 +98,22 @@ async function removeRestaurant(id) {
     if (deletionInfo.deletedCount === 0) throw 'Deletion failed!';
 }
 
-module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant }
+async function addReviewToRestaueant(restaurantId, reviewId) {
+    if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
+    if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
+    let parsedId = ObjectId(restaurantId);
+    const restaurantsCollection = await restaurants();
+    const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
+    if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
+}
+
+async function removeReviewFromRestaurant(restaurantId, reviewId) {
+    if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
+    if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
+    let parsedId = ObjectId(restaurantId);
+    const restaurantsCollection = await restaurants();
+    const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $pull: { reviews: reviewId } });
+    if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
+}
+
+module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaueant, removeReviewFromRestaurant }

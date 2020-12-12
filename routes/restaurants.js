@@ -6,7 +6,7 @@ const restaurantData = data.restaurants;
 router.get('/', async (req, res) => {
     try {
         const allRestaurants = await restaurantData.getAllRestaurants();
-        res.render('restaurants', {
+        res.render('search', {
             restaurants: allRestaurants
         });
     } catch (e) {

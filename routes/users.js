@@ -39,7 +39,8 @@ router.get('/:username', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         if (!req.body) throw 'Routes/Users.js/post: You must provide data to create a user!';
-        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/post: Missing Input Field!';
+        console.log(req.body);
+        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio) throw 'Routes/Users.js/post: Missing Input Field!';
 
         if (!req.body.username.trim()) throw "Routes/Users.js/post: Username cannot be empty!";
         if (!req.body.firstName.trim()) throw "Routes/Users.js/post: FirstName cannot be empty!";
@@ -82,8 +83,8 @@ router.put('/:id', async (req, res) => {
 
         const user = await userData.update(req.params.id, {
             username: req.body.username,
-            firstName = req.body.firstName,
-            lastName = req.body.lastName,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.lastName,
             hashedPassword: hashedPassword,
             bio: req.body.bio,

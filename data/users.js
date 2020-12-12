@@ -14,6 +14,13 @@ const exportedMethods = {
         return user;
     },
 
+    async getAll() {
+      const userCollection = await users();
+      const userList = await userCollection.find({}).toArray();
+      if (!userList) throw 'Data/Users.js/getAll: No users in system!';
+      return userList;
+    },
+
     async getByUsername(username) {
       if (!username) throw 'Data/Users.js/getByUsername: You must provide a username to search for!';
       if (typeof username !== "string") throw 'Data/Users.js/getByUsername: Username needs to be a string!';

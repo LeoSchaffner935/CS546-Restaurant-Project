@@ -21,7 +21,7 @@ app.set('view engine', 'handlebars');
 
 let authorizeUsr = function(req,res,next){
     if(req.originalUrl == "/private"){
-        if(req.session.userLogged){
+        if(req.session.user){
             next();
         }
         else{

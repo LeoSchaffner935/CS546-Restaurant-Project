@@ -39,7 +39,6 @@ router.get('/:username', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         if (!req.body) throw 'Routes/Users.js/post: You must provide data to create a user!';
-        console.log(req.body);
         if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio) throw 'Routes/Users.js/post: Missing Input Field!';
 
         if (!req.body.username.trim()) throw "Routes/Users.js/post: Username cannot be empty!";
@@ -54,7 +53,7 @@ router.post('/', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(plainTextPassword, 16); // Hash Password
 
-        const user = await userData.add(req.body.username, req.body.firstName, req.body.lastName, req.body.email, hashedPassword, req.body.bio, req.body.profilePic);
+        const user = await userData.add(req.body.username.toLowerCase(), req.body.firstName, req.body.lastName, req.body.email.toLowerCase(), hashedPassword, req.body.bio, req.body.profilePic);
 
         res.redirect('/private');
     } catch(e) {

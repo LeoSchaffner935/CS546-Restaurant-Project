@@ -1,1 +1,13 @@
-{{restaurants}}
+<h2>Restaurants</h2>
+<ul>
+    {{#each restaurants}}
+        <li><a href="/restaurant/{{_id}}">{{name}}</a></li>
+    {{/each}}
+</ul>
+
+<h2>Users</h2>
+<ul>
+    {{#each users}}
+        <li><a href="/user/{{username}}">{{username}}</a></li>
+    {{/each}}
+</ul>

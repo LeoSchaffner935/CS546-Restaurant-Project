@@ -15,7 +15,7 @@ const constructorMethod = (app) => {
     res.render('signup');
   });
 
-  router.get("/private",(req,res) => {
+  app.get("/private",(req,res) => {
     try {
         res.render("private", req.session.user);
     } catch(e) {
@@ -23,7 +23,7 @@ const constructorMethod = (app) => {
     }
   });
 
-  router.get("/logout", (req,res) => {
+  app.get("/logout", (req,res) => {
     try{
         req.session.destroy();
         res.redirect("/");

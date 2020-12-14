@@ -4,11 +4,11 @@ const data = require('../data');
 const userData = data.users;
 const bcrypt = require("bcrypt");
 
-router.get("/login", (req, res) => {
+router.get("/", (req, res) => {
     res.render('login');
 });
 
-router.post("/login", async (req,res) => {
+router.post("/", async (req,res) => {
     if (!req.body.username || req.body.username.trim() == "") {
         res.status(401).render("login",{error:true});
       }

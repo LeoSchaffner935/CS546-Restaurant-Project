@@ -28,7 +28,6 @@ module.exports = {
     async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags) {
         this.informationValidation(title, restaurantReviewed, user, rating, dateOfReview, content, tags);
         const reviewCollection = await reviews();
-
         let newReview = {
             title: title,
             restaurantReviewed: restaurantReviewed,
@@ -45,12 +44,12 @@ module.exports = {
         if (newInsertInfo.insertedCount === 0) throw "Insertion failed";
         const newId = newInsertInfo.insertedId;
 
-        // try {
-        //     await restaurants.addReviewToRestaueant(restaurantReviewed, newId.toString());
-        // } catch(e) {
-        //     console.log(e);
-        //     return;
-        // }
+        try {
+            await restaurants.addReviewToRestaurant(restaurantReviewed, newId.toString());
+        } catch(e) {
+            console.log(e);
+            return;
+        }
 
         return await this.getReviewById(newId.toString());
     },
@@ -63,11 +62,11 @@ module.exports = {
         const reviewCollection = await reviews();
         const review = await this.getReviewById(id);
 
-        // try {
-        //     await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
-        // } catch(e) {
-        //     console.log(e);
-        // }
+        try {
+            await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
+        } catch(e) {
+            console.log(e);
+        }
 
         const title = review.title;
         const deleteInfo = await reviewCollection.removeOne({_id: parsedId});

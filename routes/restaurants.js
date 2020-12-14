@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const data = require('../data');
 const restaurantData = data.restaurants;
+const reviewData = data.reviews;
+const userData = data.users;
 
 router.get('/', async (req, res) => {
     try {
@@ -19,20 +21,24 @@ router.get('/:id', async (req, res) => {
         res.status(400).json({ error: 'You must Supply an ID to get' });
         return;
     }
-    let id;
+    let id = req.params.id;
+    let restaurant;
     try {
-        id = ObjectId(req.params.id);
-    } catch (e) {
-        res.status(404).json({ error: 'id is an invalid ObjectId!' });
-    }
-    try {
-        const restaurant = await restaurantData.getRestaurantById(id);
-        res.render('restaurant', {
-            restaurant: restaurant
-        });
+        restaurant = await restaurantData.getRestaurantById(id);
+        restaurant.reviews = await reviewData.getAllReviews();
+        let filteredReviews = restaurant.reviews.filter(review => review.restaurantReviewed === restaurant._id);
+        console.log(filteredReviews);
+        for (review of restaurant.reviews) {
+            console.log('entered for')
+            console.log(review);
+            // review.user = await userData.getById(review.user);
+        }
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
     }
+    res.render('restaurant', {
+        restaurant: restaurant
+    });
 });
 
 router.post('/', async (req, res) => {

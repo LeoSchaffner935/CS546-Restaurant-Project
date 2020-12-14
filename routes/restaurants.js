@@ -25,18 +25,15 @@ router.get('/:id', async (req, res) => {
     let restaurant;
     try {
         restaurant = await restaurantData.getRestaurantById(id);
-        restaurant.reviews = await reviewData.getAllReviews();
-        let filteredReviews = restaurant.reviews.filter(review => review.restaurantReviewed === restaurant._id);
-        console.log(filteredReviews);
+        const allReviews = await reviewData.getAllReviews();
+        restaurant.reviews = allReviews.filter(review => review.restaurantReviewed === restaurant._id);
         for (review of restaurant.reviews) {
-            console.log('entered for')
-            console.log(review);
-            // review.user = await userData.getById(review.user);
+            review.user = await userData.getById(review.user);
         }
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
     }
-    
+
     let authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
@@ -170,6 +167,51 @@ router.post('/', async (req, res) => {
     } catch (e) {
         res.sendStatus(500).json({ error: 'Insertion failed!' });
     }
+});
+
+router.post('/:id/reviews', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'You must Supply an ID to get' });
+        return;
+    }
+    const restaurantId = req.params.id;
+    const review = req.body;
+    if (!review) {
+        res.status(400).json({ error: 'Data must be passed to add a review' });
+        return;
+    }
+    try {
+        let restaurant = await restaurantData.getRestaurantById(restaurantId);
+        console.log(restaurant);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found with given id!' });
+        return;
+    }
+    try {
+        await userData.getById(review.user);
+    } catch (e) {
+        res.status(404).json({ error: 'User not found with given id!' });
+        return;
+    }
+    if (!review.rating || Number.isNaN(review.rating)) {
+        res.status(400).json({ error: 'Rating is not a number' });
+        return;
+    }
+    //TODO dataOfReview
+    if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
+        res.status(400).json({ error: 'Title is empty' });
+        return;
+    }
+    if (!review.content || typeof review.content !== "string" || !review.content.trim()) {
+        res.status(400).json({ error: 'Content is empty' });
+        return;
+    }
+    if (!Array.isArray(review.tags)) {
+        res.status(400).json({ error: 'Tags is not an array' });
+        return;
+    }
+    let newReview = await reviewData.addReview(review.title, restaurantId, review.user, review.rating, review.dateOfReview, review.content, review.tags, 0, [])
+    res.json(newReview);
 });
 
 module.exports = router;

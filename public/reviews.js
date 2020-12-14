@@ -16,9 +16,11 @@
         error.show();
       }
       else {
+        console.log($('#restaurantId').val());
         let requestConfig = {
           method: 'POST',
-          url: '/restaurant/' + restaurantId + '/reviews' // How to get restaurantId?
+          url: '/restaurants/' + $('#restaurantId').val() + '/reviews', // How to get restaurantId?
+          data: $('#reviewForm').serializeArray()
         };
         $.ajax(requestConfig).then(function (responseMessage) {
           let newReview = $('<div></div>');

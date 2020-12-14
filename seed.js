@@ -55,8 +55,8 @@ async function main() {
     }
     restaurant2 = await restaurants.addRestaurant(restaurant2);
 
-    const review1 = await reviews.addReview("Good", restaurant1._id, user1._id, 5, "08/09/2020", "good restaurant", ["healthy"]);
-    const review2 = await reviews.addReview("Bad", restaurant2._id, user2._id, 1, "08/22/2020", "bad restaurant", []);
+    const review1 = await reviews.addReview("Good", restaurant1._id, user1._id, 5, "08/09/2020", "good restaurant", ["healthy"], 0, []);
+    const review2 = await reviews.addReview("Bad", restaurant2._id, user2._id, 1, "08/22/2020", "bad restaurant", [], 1, ['true']);
     //await reviews.removeReview(review1._id.toString());
     await reviews.addCommentToReview(review1._id.toString(), "5fbe1a3f71eceee5127ab577");
     await reviews.removeCommentFromReview(review1._id.toString(), "5fbe19be336cf2b3ec765b69");

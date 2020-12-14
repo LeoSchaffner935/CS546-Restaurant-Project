@@ -88,10 +88,10 @@ async function removeRestaurant(id) {
 async function addReviewToRestaurant(restaurantId, reviewId) {
     if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
     if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
+    console.log('inside addReviewToRestaurant '+restaurantId);
     let parsedId = ObjectId(restaurantId);
     const restaurantsCollection = await restaurants();
     const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
-    if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
 }
 
 async function removeReviewFromRestaurant(restaurantId, reviewId) {

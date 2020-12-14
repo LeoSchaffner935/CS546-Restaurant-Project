@@ -11,6 +11,7 @@ const exportedMethods = {
         const userCollection = await users();
         const user = await userCollection.findOne({ _id: parsedId });
         if (!user) throw 'Data/Users.js/getById: User not found!';
+        user._id = user._id.toString();
         return user;
     },
 

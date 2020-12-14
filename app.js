@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const configRoutes = require('./routes');
+const session = require('express-session');
 const exphbs = require('express-handlebars');
 
 app.use('/public', express.static(__dirname + '/public'));

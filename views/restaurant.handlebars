@@ -1,12 +1,12 @@
 <h1>{{restaurant.name}}</h1>
-<!-- <p>{{restaurant.category}}</p>
+<p>{{restaurant.category}}</p>
 <p>{{restaurant.rating}}</p>
 <p>{{restaurant.serviceModes}}</p>
 <p>{{restaurant.frequentTags}}</p>
 <p>{{restaurant.hours}}</p>
 <p>{{restaurant.featuredItems}}</p>
 <p>{{restaurant.menu}}</p>
-<p>{{restaurant.nearByRestaurants}}</p> -->
+<p>{{restaurant.nearByRestaurants}}</p>
 
 {{#unless authenticated}}
     <p>You must be logged in to post a review</p>
@@ -15,7 +15,10 @@
 {{#if authenticated}}
     <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
         <label>Title
-            <input id="title" name="title" type="text" placeholder="Type in review">
+            <input id="title" name="title" type="text" placeholder="Title">
+        </label>
+        <label>Rating
+            <input id="rating" name="rating" type="number" placeholder="Rating">
         </label>
         <label>Review
             <input id="content" name="content" type="text" placeholder="Type in review">
@@ -29,8 +32,9 @@
 <div id="reviewList">
 {{#each restaurant.reviews}}
     <div id="review">
-        <span>Review by user: {{user.username}}</span>
+        <p>Review Posted By: {{user.username}}</p>
         <p class="reviewTitle">{{title}}</p>
+        <p>Rating: {{rating}}</p>
         <p>{{content}}</p>
     </div>
 {{/each}}

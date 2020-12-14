@@ -1,0 +1,19 @@
+<h1>{{restaurant.name}}</h1>
+<p>{{restaurant.category}}</p>
+<p>{{restaurant.rating}}</p>
+<p>{{restaurant.serviceModes}}</p>
+<p>{{restaurant.frequentTags}}</p>
+<p>{{restaurant.hours}}</p>
+<p>{{restaurant.featuredItems}}</p>
+{{#each restaurant.reviews}}
+    <div>
+        <span>Review by user: {{user}}</span>
+        <p class="reviewTitle">{{title}}</p>
+        <p>{{content}}</p>
+    </div>
+{{/each}}
+<p>{{restaurant.menu}}</p>
+<p>{{restaurant.nearByRestaurants}}</p>
+
+<!--tags, user with link, review
+if user logged in who posted the review, update and delete button-->

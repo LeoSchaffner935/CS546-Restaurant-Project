@@ -19,12 +19,12 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 let authorizeUsr = function(req,res,next){
-    if(req.originalUrl == "/user"){
+    if(req.originalUrl == "/private"){
         if(req.session.userLogged){
             next();
         }
         else{
-            res.status(403).render("templates/Login");
+            res.status(403).render("Login");
         }
     }
     else{

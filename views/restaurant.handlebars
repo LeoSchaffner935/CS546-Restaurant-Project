@@ -14,9 +14,13 @@
 
 {{#if authenticated}}
     <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
-        <label>Review
-            <input id="reviewContent" type="text" placeholder="Type in review">
+        <label>Title
+            <input id="title" name="title" type="text" placeholder="Type in review">
         </label>
+        <label>Review
+            <input id="content" name="content" type="text" placeholder="Type in review">
+        </label>
+        <input id="restaurantId" value="{{restaurant._id}}" hidden>
         <button type="submit">Post</button>
     </form>
     <p id="error"></p>
@@ -25,7 +29,7 @@
 <div id="reviewList">
 {{#each restaurant.reviews}}
     <div id="review">
-        <span>Review by user: {{user}}</span>
+        <span>Review by user: {{user.username}}</span>
         <p class="reviewTitle">{{title}}</p>
         <p>{{content}}</p>
     </div>

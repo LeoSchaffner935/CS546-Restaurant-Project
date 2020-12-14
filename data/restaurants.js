@@ -91,7 +91,7 @@ async function addReviewToRestaurant(restaurantId, reviewId) {
     console.log('inside addReviewToRestaurant '+restaurantId);
     let parsedId = ObjectId(restaurantId);
     const restaurantsCollection = await restaurants();
-    const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
+    restaurantsCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
 }
 
 async function removeReviewFromRestaurant(restaurantId, reviewId) {

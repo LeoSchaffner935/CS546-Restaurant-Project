@@ -25,7 +25,7 @@ module.exports = {
         return review;
     },
 
-    async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags) {
+    async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags, sReview, comments) {
         this.informationValidation(title, restaurantReviewed, user, rating, dateOfReview, content, tags);
         const reviewCollection = await reviews();
         let newReview = {
@@ -35,8 +35,8 @@ module.exports = {
             rating: rating,
             dateOfReview: dateOfReview,
             content: content,
-            sReview: 0,
-            comments: [],
+            sReview: sReview,
+            comments: comments,
             tags: tags
         };
 

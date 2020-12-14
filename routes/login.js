@@ -1,16 +1,16 @@
 const express = require("express");
 const router = express.Router();
 const data = require('../data');
-const userData = data.users;
+const users = data.users;
 const bcrypt = require("bcrypt");
 const saltRounds = 16;
 
 router.post("/login", async (req,res) => {
     if (!req.body.username || req.body.username.trim() == "") {
-        res.status(401).render("templates/Login",{error:true});
+        res.status(401).render("Login",{error:true});
       }
       if (!req.body.password || req.body.password.trim() == "") {
-        res.status(401).render("templates/Login",{error:true});
+        res.status(401).render("Login",{error:true});
       }
       let passMatch = false;
       for (let i = 0; i < users.length; i++) {
@@ -26,18 +26,18 @@ router.post("/login", async (req,res) => {
                   bio: users[i].bio,
                   profilePic: users[i].profilePic
               };
-              res.redirect('http://localhost:3000/user');
+              res.redirect('http://localhost:3000/private');
               return;
           }
       }
-      res.status(401).render("templates/Login",{error:true});
+      res.status(401).render("Login",{error:true});
 });
 
-router.get("/user",(req,res) => {
+router.get("/private",(req,res) => {
     try{
         let user = currentUser(req.session.id);
         let {_id, username, firstName, lastName, email, hashedPassword, bio, profilePic} = user;
-        res.render("templates/User",{"username":username, "firstName":firstName, "lastName":lastName,"email":email, "bio":bio, "profilePic":profilePic});
+        res.render("Private",{"username":username, "firstName":firstName, "lastName":lastName,"email":email, "bio":bio, "profilePic":profilePic});
     }catch(e){
         res.sendStatus(500);
     }
@@ -46,7 +46,7 @@ router.get("/user",(req,res) => {
 router.get("/logout", (req,res) => {
     try{
         req.session.destroy();
-        res.render("templates/Main");
+        res.render("Main");
     }catch(e){
         res.sendStatus(500);
     }

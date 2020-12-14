@@ -36,8 +36,11 @@ router.get('/:id', async (req, res) => {
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
     }
+    
+    let authenticated = req.session.user ? true : false;
     res.render('restaurant', {
-        restaurant: restaurant
+        restaurant: restaurant,
+        authenticated: authenticated
     });
 });
 

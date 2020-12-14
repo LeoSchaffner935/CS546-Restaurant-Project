@@ -1,19 +1,40 @@
 <h1>{{restaurant.name}}</h1>
-<p>{{restaurant.category}}</p>
+<!-- <p>{{restaurant.category}}</p>
 <p>{{restaurant.rating}}</p>
 <p>{{restaurant.serviceModes}}</p>
 <p>{{restaurant.frequentTags}}</p>
 <p>{{restaurant.hours}}</p>
 <p>{{restaurant.featuredItems}}</p>
+<p>{{restaurant.menu}}</p>
+<p>{{restaurant.nearByRestaurants}}</p> -->
+
+{{#unless authenticated}}
+    <p>You must be logged in to post a review</p>
+{{/unless}}
+
+{{#if authenticated}}
+    <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
+        <label>Review
+            <input id="reviewContent" type="text" placeholder="Type in review">
+        </label>
+        <button type="submit">Post</button>
+    </form>
+    <p id="error"></p>
+{{/if}}
+
+<div id="reviewList">
 {{#each restaurant.reviews}}
-    <div>
+    <div id="review">
         <span>Review by user: {{user}}</span>
         <p class="reviewTitle">{{title}}</p>
         <p>{{content}}</p>
     </div>
 {{/each}}
-<p>{{restaurant.menu}}</p>
-<p>{{restaurant.nearByRestaurants}}</p>
+</div>
+
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+<script src="../public/reviews.js"></script>
 
 <!--tags, user with link, review
 if user logged in who posted the review, update and delete button-->

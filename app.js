@@ -8,6 +8,9 @@ app.use('/public', express.static(__dirname + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
+
 app.use(session({
     name:"AuthCookie",
     secret:"secretcookiedontbiteit",
@@ -15,9 +18,6 @@ app.use(session({
     saveUninitialized:true
     })
 );
-
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
-app.set('view engine', 'handlebars');
 
 let authorizeUsr = function(req,res,next){
     if(req.originalUrl == "/private"){
@@ -33,6 +33,7 @@ let authorizeUsr = function(req,res,next){
     }
 }
 app.use(authorizeUsr);
+
 configRoutes(app);
 app.listen(3000, () => {
   console.log("Server On!");

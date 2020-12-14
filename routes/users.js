@@ -27,7 +27,6 @@ router.get('/:username', async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             bio: user.bio,
-            profilePic: user.profilePic,
             reviews: fullReviews,
             comments: fullComments
         });
@@ -47,13 +46,12 @@ router.post('/', async (req, res) => {
         if (!req.body.email.trim()) throw "Routes/Users.js/post: Email cannot be empty!";
         if (!req.body.password.trim()) throw "Routes/Users.js/post: Password cannot be empty!";
         if (!req.body.bio.trim()) throw "Routes/Users.js/post: Bio cannot be empty!";
-        // Profile Pic
 
         if (!emailValidator.validate(req.body.email)) throw "Routes/Users.js/post: Email must be valid!"; // Validate Email
 
         const hashedPassword = await bcrypt.hash(plainTextPassword, 16); // Hash Password
 
-        const user = await userData.add(req.body.username.toLowerCase(), req.body.firstName, req.body.lastName, req.body.email.toLowerCase(), hashedPassword, req.body.bio, req.body.profilePic);
+        const user = await userData.add(req.body.username.toLowerCase(), req.body.firstName, req.body.lastName, req.body.email.toLowerCase(), hashedPassword, req.body.bio);
 
         res.redirect('/private');
     } catch(e) {
@@ -66,7 +64,7 @@ router.put('/:id', async (req, res) => {
         if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/put: Id must be a number!';
         
         if (!req.body) throw 'Routes/Users.js/put: You must provide data to update a user!';
-        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio || !req.body.profilePic) throw 'Routes/Users.js/put: Missing Input Field!';
+        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio) throw 'Routes/Users.js/put: Missing Input Field!';
         
         if (!req.body.username.trim()) throw "Routes/Users.js/put: Username cannot be empty!";
         if (!req.body.firstName.trim()) throw "Routes/Users.js/put: FirstName cannot be empty!";
@@ -74,7 +72,6 @@ router.put('/:id', async (req, res) => {
         if (!req.body.email.trim()) throw "Routes/Users.js/put: Email cannot be empty!";
         if (!req.body.password.trim()) throw "Routes/Users.js/put: Password cannot be empty!";
         if (!req.body.bio.trim()) throw "Routes/Users.js/put: Bio cannot be empty!";
-        // Profile Pic
 
         if (!emailValidator.validate(email)) throw "Routes/Users.js/put: Email must be valid!";
 
@@ -86,8 +83,7 @@ router.put('/:id', async (req, res) => {
             lastName: req.body.lastName,
             email: req.body.lastName,
             hashedPassword: hashedPassword,
-            bio: req.body.bio,
-            profilePic: req.body.profilePic
+            bio: req.body.bio
         });
 
         res.redirect('/private');
@@ -130,7 +126,6 @@ router.patch('/:id', async (req, res) => {
             if (!req.body.password.trim()) throw 'Routes/Users.js/patch: Password cannot be empty!';
             updatedObject.hashedPassword = await bcrypt.hash(req.body.password, 16);
         }
-        // Profile Pic
 
         const user = await userData.update(req.params.id, updatedObject);
 

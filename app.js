@@ -19,20 +19,10 @@ app.use(session({
     })
 );
 
-let authorizeUsr = function(req,res,next){
-    if(req.originalUrl == "/private"){
-        if(req.session.user){
-            next();
-        }
-        else{
-            res.status(403).render("Login");
-        }
-    }
-    else{
-        next();
-    }
-}
-app.use(authorizeUsr);
+app.use('/private', (req, res, next) => {
+    if (!req.session.user) return res.status(403).redirect('/login');
+    else next();
+});
 
 configRoutes(app);
 app.listen(3000, () => {

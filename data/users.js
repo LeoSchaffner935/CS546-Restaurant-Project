@@ -32,7 +32,7 @@ const exportedMethods = {
       return user;
     },
 
-    async add(username, firstName, lastName, email, hashedPassword, bio, profilePic) {
+    async add(username, firstName, lastName, email, hashedPassword, bio) {
         // TODO: Get default profile pic, use as default if not provided
         //       See GridFS, Mongoose, HTML (type="image") for uploading image to server and storing here
 
@@ -44,7 +44,6 @@ const exportedMethods = {
         if (!email.trim()) throw "Data/Users.js/add: Email cannot be empty!";
         if (!hashedPassword.trim()) throw "Data/Users.js/add: HashedPassword cannot be empty!";
         if (!bio.trim()) throw "Data/Users.js/add: Bio cannot be empty!";
-        // Profile Pic
 
         const userCollection = await users();
 
@@ -55,7 +54,6 @@ const exportedMethods = {
             email: email,
             hashedPassword: hashedPassword,
             bio: bio,
-            profilePic: profilePic,
             reviews: [],
             comments: []
         };
@@ -79,7 +77,6 @@ const exportedMethods = {
           email: updatedUser.email,
           hashedPassword: updatedUser.hashedPassword,
           bio: updatedUser.bio,
-          profilePic: updatedUser.profilePic,
           reviews: user.reviews,
           comments: user.comments
         };

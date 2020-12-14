@@ -16,11 +16,9 @@ const constructorMethod = (app) => {
   });
 
   router.get("/private",(req,res) => {
-    try{
-        let user = currentUser(req.session.id);
-        let {_id, username, firstName, lastName, email, hashedPassword, bio, profilePic} = user;
-        res.render("Private",{"username":username, "firstName":firstName, "lastName":lastName,"email":email, "bio":bio, "profilePic":profilePic});
-    }catch(e){
+    try {
+        res.render("private", req.session.user);
+    } catch(e) {
         res.sendStatus(500);
     }
   });

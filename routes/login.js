@@ -10,10 +10,10 @@ router.get("/login", (req, res) => {
 
 router.post("/login", async (req,res) => {
     if (!req.body.username || req.body.username.trim() == "") {
-        res.status(401).render("Login",{error:true});
+        res.status(401).render("login",{error:true});
       }
       if (!req.body.password || req.body.password.trim() == "") {
-        res.status(401).render("Login",{error:true});
+        res.status(401).render("login",{error:true});
       }
       const users = await userData.getAll();
       let passMatch = false;
@@ -26,15 +26,13 @@ router.post("/login", async (req,res) => {
                   firstName: users[i].firstName,
                   lastName: users[i].lastName,
                   email: users[i].email,
-                  hashedPassword: users[i].hashedPassword,
-                  bio: users[i].bio,
-                  profilePic: users[i].profilePic
+                  bio: users[i].bio
               };
               res.redirect('/private');
               return;
           }
       }
-      res.status(401).render("Login",{error:true});
+      res.status(401).render("login",{error:true});
 });
 
 module.exports = router;

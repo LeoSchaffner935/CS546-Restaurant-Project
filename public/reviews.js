@@ -19,7 +19,7 @@
         console.log($('#restaurantId').val());
         let requestConfig = {
           method: 'POST',
-          url: '/restaurants/' + $('#restaurantId').val() + '/reviews', // How to get restaurantId?
+          url: '/restaurants/' + $('#restaurantId').val() + '/reviews',
           data: $('#reviewForm').serializeArray()
         };
         $.ajax(requestConfig).then(function (responseMessage) {

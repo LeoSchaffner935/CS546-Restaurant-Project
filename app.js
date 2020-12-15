@@ -15,8 +15,9 @@ app.use(session({
     name:"AuthCookie",
     secret:"secretcookiedontbiteit",
     resave:false,
-    saveUninitialized:true
+    saveUninitialized:true,
     //cookie max age?
+    cookie: { maxAge: 100000 }
     })
 );
 

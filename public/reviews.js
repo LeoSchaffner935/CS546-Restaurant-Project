@@ -39,12 +39,15 @@
         let requestConfig = {
           method: 'POST',
           url: '/restaurants/' + $('#restaurantId').val() + '/reviews',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
           data: $('#reviewForm').serializeArray()
         };
-        $.ajax(requestConfig).then(function (responseMessage) {
+        $.ajax(requestConfig).then(function (addedReview) {
           let newReview = $('<div></div>');
-          let a = $('<a></a>').text(username);
-          a.attr('href', "/users/"+username)
+          let a = $('<a></a>').text(addedReview.username);
+          a.attr('href', "/users/"+addedReview.username)
           newReview.append(a);
           newReview.append($('<h3></h3>').text(title));
           newReview.append($('<p></p>').text(new Date()));

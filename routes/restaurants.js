@@ -28,7 +28,7 @@ router.get('/:id', async (req, res) => {
         const allReviews = await reviewData.getAllReviews();
         restaurant.reviews = allReviews.filter(review => review.restaurantReviewed === restaurant._id);
         for (review of restaurant.reviews) {
-            review.user = await userData.getById(review.user);
+            review.user = await userData.getById(review.userId);
         }
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
@@ -189,21 +189,16 @@ router.post('/:id/reviews', async (req, res) => {
     }
     try {
         let restaurant = await restaurantData.getRestaurantById(restaurantId);
-        console.log(restaurant);
     } catch (e) {
         res.status(404).json({ error: 'Restaurant not found with given id!' });
         return;
     }
-    try {
-        await userData.getById(review.user);
-    } catch (e) {
-        res.status(404).json({ error: 'User not found with given id!' });
-        return;
-    }
+    review.userId = req.session.user._id;
     if (!review.rating || Number.isNaN(review.rating)) {
         res.status(400).json({ error: 'Rating is not a number' });
         return;
     }
+    review.rating = parseInt(review.rating);
     if (review.rating < 1 || review.rating > 5) {
         res.status(400).json({ error: 'Rating must be from 1-5' });
         return;
@@ -217,11 +212,19 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Content is empty' });
         return;
     }
-    if (!Array.isArray(review.tags)) {
-        res.status(400).json({ error: 'Tags is not an array' });
-        return;
+    let newTags = [];
+    if (review.tags) {
+        if (typeof review.tags !== "string" || !review.tags.trim()) {
+            res.status(400).json({ error: 'Invalid tags' });
+            return;
+        }
+        for (tag of review.tags.split(",")) {
+            if (!newTags.includes(tag.trim())) newTags.push(tag.trim());
+        }
     }
-    let newReview = await reviewData.addReview(review.title, restaurantId, review.user, review.rating, dateOfReview, review.content, review.tags);
+    review.tags = newTags;
+    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags);
+    newReview.username = req.session.user.username;
     res.json(newReview);
 });
 

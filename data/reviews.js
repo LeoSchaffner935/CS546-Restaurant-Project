@@ -21,19 +21,19 @@ module.exports = {
         if (typeof id != "string") throw "Id type invalid";
         let parsedId = ObjectId(id);
         const reviewCollection = await reviews();
-        const review = await reviewCollection.findOne({_id: parsedId});
+        const review = await reviewCollection.findOne({ _id: parsedId });
         if (!review) throw "Review not found";
         review._id = review._id.toString();
         return review;
     },
 
-    async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags, sReview, comments) {
-        this.informationValidation(title, restaurantReviewed, user, rating, dateOfReview, content, tags);
+    async addReview(title, restaurantReviewed, userId, rating, dateOfReview, content, tags, sReview, comments) {
+        this.informationValidation(title, restaurantReviewed, userId, rating, content);
         const reviewCollection = await reviews();
         let newReview = {
             title: title,
             restaurantReviewed: restaurantReviewed,
-            user: user,
+            userId: userId,
             rating: rating,
             dateOfReview: dateOfReview,
             content: content,
@@ -48,8 +48,8 @@ module.exports = {
 
         try {
             await restaurants.addReviewToRestaurant(restaurantReviewed, newId.toString());
-            await users.addReviewToUser(user, newId.toString());
-        } catch(e) {
+            // await users.addReviewToUser(user, newId.toString());
+        } catch (e) {
             console.log(e);
             return;
         }
@@ -71,12 +71,12 @@ module.exports = {
             });
             await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
             await users.removeReviewFromUser(review.user, id);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
 
         const title = review.title;
-        const deleteInfo = await reviewCollection.removeOne({_id: parsedId});
+        const deleteInfo = await reviewCollection.removeOne({ _id: parsedId });
         if (deleteInfo.deletedCount === 0) throw "Deletion failed";
         console.log(`Review ${title} has been successfully deleted`);
         return true;
@@ -86,8 +86,7 @@ module.exports = {
         if (!id) throw "Id not exist";
         if (typeof id != "string") throw "Id type invalid";
         this.informationValidation(updatedReview.title, updatedReview.restaurantReviewed,
-            updatedReview.user, updatedReview.rating, updatedReview.dateOfReview, updatedReview.content,
-            updatedReview.tags);
+            updatedReview.user, updatedReview.rating, updatedReview.content);
         /*if (!updatedReview.comments) throw "Comments not exist";
         if (!Array.isArray(updatedReview.comments)) throw "Comments not array";
         if (updatedReview.comments.length !== 0) {
@@ -159,29 +158,15 @@ module.exports = {
         return await this.getReviewById(reviewId);
     },
 
-    informationValidation(title, restaurantReviewed, user, rating, dateOfReview, content, tags) {
-        if (!title || !restaurantReviewed || !user || !rating || !dateOfReview || !content || !tags) {
-            throw "Information of review is not complete";
-        }
-        if (typeof title != "string" ||
-        typeof restaurantReviewed != "string" ||
-        typeof user != "string" ||
-        typeof rating != "number" ||
-        typeof dateOfReview != "string" ||
-        typeof content != "string" ||
-        !Array.isArray(tags)) {
-            throw "Information of review type invalid";
-        }
-        if (title.trim().length === 0 ||
-        restaurantReviewed.trim().length === 0 ||
-        user.trim().length === 0 ||
-        dateOfReview.trim().length === 0 ||
-        content.trim().length === 0) {
-            throw "Information of review is empty or whitespaces only";
-        }
+    informationValidation(title, restaurantReviewed, userId, rating, content) {
+        if (!title || typeof title != "string" || !title.trim()) throw 'Invalid title';
+        if (!restaurantReviewed || typeof restaurantReviewed != "string" || !restaurantReviewed.trim()) throw 'Invalid restaurantReviewed';
+        if (!userId || typeof userId != "string" || !userId.trim()) throw 'Invalid userId';
+        if (!rating || typeof rating != "number" || rating < 1 || rating > 5) throw 'Invalid rating';
+        if (!content || typeof content != "string" || !content.trim()) throw 'Invalid content';
+
         ObjectId(restaurantReviewed);
-        ObjectId(user);
-        if (rating < 1 || rating > 5) throw "Rating is out of range";
+        ObjectId(userId);
         /*if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateOfReview)) {
             throw "Date published format invalid";
         }

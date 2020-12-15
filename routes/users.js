@@ -14,12 +14,12 @@ router.get('/:username', async (req, res) => {
 
         let fullReviews = [];
         user.reviews.forEach(async r => {
-            fullReviews.append(await reviewData.getReviewById(r));
+            fullReviews.push(await reviewData.getReviewById(r));
         });
 
         let fullComments = [];
         user.comments.forEach(async c => {
-            fullComments.append(await commentData.getCommentById(c));
+            fullComments.push(await commentData.getCommentById(c));
         });
 
         res.render('user', {
@@ -86,7 +86,14 @@ router.post('/', async (req, res) => {
         user.reviews = [];
         user.comments = [];
         const savedUser = await userData.add(user);
-        req.session.user = { username: savedUser.username, firstName: savedUser.firstName, lastName: savedUser.lastName };
+        req.session.user = {
+            _id: savedUser._id,
+            username: savedUser.username,
+            firstName: savedUser.firstName,
+            lastName: savedUser.lastName,
+            email: savedUser.email,
+            bio: savedUser.bio
+        };
         res.redirect('/restaurants');
     } catch (e) {
         res.status(400).json(e);

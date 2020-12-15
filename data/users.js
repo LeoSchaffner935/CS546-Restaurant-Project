@@ -137,10 +137,10 @@ const exportedMethods = {
         const parsedId = ObjectId(id);
 
         const user = await this.getById(id);
-        user.reviews.forEach(r => {
+        user.reviews.forEach(async r => {
           await reviews.removeReview(r);
         });
-        user.comments.foreach(c => {
+        user.comments.foreach(async c => {
           await comments.removeComment(c);
         });
     

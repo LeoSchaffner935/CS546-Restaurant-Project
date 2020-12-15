@@ -1,18 +1,42 @@
 <h1>{{restaurant.name}}</h1>
-<p>{{restaurant.category}}</p>
-<p>{{restaurant.rating}}</p>
-<p>{{restaurant.serviceModes}}</p>
-<p>{{restaurant.frequentTags}}</p>
-<p>{{restaurant.hours}}</p>
-<p>{{restaurant.featuredItems}}</p>
-<p>{{restaurant.menu}}</p>
-<p>{{restaurant.nearByRestaurants}}</p>
+<dl id="restaurantInfo">
+    <dt>Location</dt>
+    <dd>{{restaurant.location.address}}</dd>
+    
+    <dt>Categories</dt>
+    {{#each restaurant.categories}}
+    <dd>{{this}}</dd>
+    {{/each}}
+
+    <dt>Rating</dt>
+    <dd>{{restaurant.rating}}</dd>
+
+    <dt>Service Modes</dt>
+    {{#each restaurant.serviceModes}}
+    <dd>{{this}}</dd>
+    {{/each}}
+
+    <dt>Frequent Tags</dt>
+    {{#each restaurant.frequentTags}}
+    <dd>{{this}}</dd>
+    {{/each}}
+
+    <dt>Menu</dt>
+    <dd><a href="{{restaurant.menu}}">{{restaurant.menu}}</a></dd>
+
+    <dt>Hours</dt>
+    <dd>To be Implemented</dd>
+
+    <dt>Featured Items</dt>
+    <dd>To be implemented</dd>
+</dl>
 
 {{#unless authenticated}}
     <p>You must be logged in to post a review</p>
 {{/unless}}
 
 {{#if authenticated}}
+    <p>Post a Review</p>
     <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
         <label>Title
             <input id="title" name="title" type="text" placeholder="Title">
@@ -30,11 +54,13 @@
     <p id="error"></p>
 {{/if}}
 
+<h2>Reviews</h2>
 <div id="reviewList">
 {{#each restaurant.reviews}}
     <div id="review">
         <a href="/users/{{user.username}}">{{user.username}}</a>
-        <p class="reviewTitle">{{title}}</p>
+        <h3>{{title}}</h3>
+        <p>{{dateOfReview}}</p>
         <p>Rating: {{rating}}</p>
         <p>{{content}}</p>
     </div>

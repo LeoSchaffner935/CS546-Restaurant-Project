@@ -66,7 +66,7 @@ module.exports = {
         const review = await this.getReviewById(id);
 
         try {
-            review.comments.forEach(c => {
+            review.comments.forEach(async c => {
                 await comments.removeComment(c);
             });
             await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);

@@ -2,7 +2,8 @@
     <h1>{{username}}</h1>
     <p>{{firstName}} {{lastName}}</p>
     <p>Bio: {{bio}}</p>
-    <div id="userReviews">Reviews
+    <div id="userReviews">
+        <h2>Reviews</h2>
         {{#each reviews}}
             <dl id="userReview">
                 <dt>Title</dt>
@@ -27,7 +28,8 @@
             </dl>
         {{/each}}
     </div>
-    <div id="userComments">Comments
+    <div id="userComments">
+        <h2>Comments</h2>
         {{#each comments}}
             <dl id="userComment">
                 <dt>Date</dt>
@@ -35,9 +37,6 @@
 
                 <dt>Comment</dt>
                 <dd>{{this.comment}}</dd>
-
-                <dt>Go To Review</dt>
-                <dd><a src="/reviews/{{this.reviewId}}"></a></dd>
             </dl>
         {{/each}}
     </div>

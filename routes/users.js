@@ -10,7 +10,7 @@ const emailValidator = require("email-validator");
 router.get('/:username', async (req, res) => {
     try {
         // Check Format of Username
-        const user = await userData.getByUsername(req.params.username.toLowerCase());
+        const user = await userData.getByUsername(req.params.username);
 
         let fullReviews = [];
         user.reviews.forEach(r => {
@@ -51,7 +51,7 @@ router.post('/', async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(plainTextPassword, 16); // Hash Password
 
-        const user = await userData.add(req.body.username.toLowerCase(), req.body.firstName, req.body.lastName, req.body.email.toLowerCase(), hashedPassword, req.body.bio);
+        const user = await userData.add(req.body.username, req.body.firstName, req.body.lastName, req.body.email.toLowerCase(), hashedPassword, req.body.bio);
 
         res.redirect('/private');
     } catch(e) {

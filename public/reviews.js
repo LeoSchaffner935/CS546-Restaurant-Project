@@ -46,8 +46,9 @@
           let a = $('<a></a>').text(username);
           a.attr('href', "/users/"+username)
           newReview.append(a);
-          newReview.append($('<h2></h2>').text(title));
-          newReview.append($('<p></p>').text(rating));
+          newReview.append($('<h3></h3>').text(title));
+          newReview.append($('<p></p>').text(new Date()));
+          newReview.append($('<p></p>').text("Rating: "+rating));
           newReview.append($('<p></p>').text(content));
           reviewList.append(newReview);
         });

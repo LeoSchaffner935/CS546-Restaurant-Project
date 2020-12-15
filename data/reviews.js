@@ -1,6 +1,8 @@
 const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
 const restaurants = require("./restaurants");
+const users = require('./users');
+const comments = require('./comments');
 let { ObjectId } = require("mongodb");
 
 module.exports = {
@@ -25,7 +27,7 @@ module.exports = {
         return review;
     },
 
-    async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags, sReview, comments) {
+    async addReview(title, restaurantReviewed, user, rating, dateOfReview, content, tags) {
         this.informationValidation(title, restaurantReviewed, user, rating, dateOfReview, content, tags);
         const reviewCollection = await reviews();
         let newReview = {
@@ -35,8 +37,8 @@ module.exports = {
             rating: rating,
             dateOfReview: dateOfReview,
             content: content,
-            sReview: sReview,
-            comments: comments,
+            sReview: 0,
+            comments: [],
             tags: tags
         };
 
@@ -46,6 +48,7 @@ module.exports = {
 
         try {
             await restaurants.addReviewToRestaurant(restaurantReviewed, newId.toString());
+            await users.addReviewToUser(user, newId.toString());
         } catch(e) {
             console.log(e);
             return;
@@ -63,7 +66,11 @@ module.exports = {
         const review = await this.getReviewById(id);
 
         try {
+            review.comments.forEach(async c => {
+                await comments.removeComment(c);
+            });
             await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
+            await users.removeReviewFromUser(review.user, id);
         } catch(e) {
             console.log(e);
         }
@@ -81,15 +88,16 @@ module.exports = {
         this.informationValidation(updatedReview.title, updatedReview.restaurantReviewed,
             updatedReview.user, updatedReview.rating, updatedReview.dateOfReview, updatedReview.content,
             updatedReview.tags);
-        if (!updatedReview.comments) throw "Comments not exist";
+        /*if (!updatedReview.comments) throw "Comments not exist";
         if (!Array.isArray(updatedReview.comments)) throw "Comments not array";
         if (updatedReview.comments.length !== 0) {
             for (let c of updatedReview.comments) {
                 let parsedId = ObjectId(c);
                 // object id validation
             }
-        }
+        }*/
 
+        const review = await this.getReviewById(id);
         let parsedId = ObjectId(id);
         let reviewUpdatedInfo = {
             title: updatedReview.title,
@@ -99,7 +107,7 @@ module.exports = {
             dateOfReview: updatedReview.dateOfReview,
             content: updatedReview.content,
             sReview: updatedReview.sReview,
-            comments: updatedReview.comments,
+            comments: review.comments,
             tags: updatedReview.tags
         }
         const reviewCollection = await reviews();
@@ -173,8 +181,8 @@ module.exports = {
         }
         ObjectId(restaurantReviewed);
         ObjectId(user);
-        if (rating < 0 || rating > 10) throw "Rating is out of range";
-        if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateOfReview)) {
+        if (rating < 1 || rating > 5) throw "Rating is out of range";
+        /*if (!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateOfReview)) {
             throw "Date published format invalid";
         }
         let dateList = dateOfReview.split("/");
@@ -186,6 +194,6 @@ module.exports = {
         // lets just ignore 2/29
         if (month < 1 || month > 12) throw "Date reviewed month invalid";
         if (day < 1 || day > dayInMonth[month - 1]) throw "Date reviewed day invalid";
-        if (year < 2000 || year > d.getFullYear()) throw "Date reviewed year invalid";
+        if (year < 2000 || year > d.getFullYear()) throw "Date reviewed year invalid";*/
     }
 }

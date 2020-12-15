@@ -1,17 +1,21 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const data = require('../data');
-const users = data.users;
+const userData = data.users;
 const bcrypt = require("bcrypt");
-const saltRounds = 16;
 
-router.post("/login", async (req,res) => {
+router.get("/", (req, res) => {
+    res.render('login');
+});
+
+router.post("/", async (req,res) => {
     if (!req.body.username || req.body.username.trim() == "") {
-        res.status(401).render("Login",{error:true});
+        res.status(401).render("login",{error:true});
       }
       if (!req.body.password || req.body.password.trim() == "") {
-        res.status(401).render("Login",{error:true});
+        res.status(401).render("login",{error:true});
       }
+      const users = await userData.getAll();
       let passMatch = false;
       for (let i = 0; i < users.length; i++) {
           passMatch = await bcrypt.compare(req.body.password, users[i].hashedPassword);
@@ -22,32 +26,13 @@ router.post("/login", async (req,res) => {
                   firstName: users[i].firstName,
                   lastName: users[i].lastName,
                   email: users[i].email,
-                  hashedPassword: users[i].hashedPassword,
-                  bio: users[i].bio,
-                  profilePic: users[i].profilePic
+                  bio: users[i].bio
               };
-              res.redirect('http://localhost:3000/private');
+              res.redirect('/private');
               return;
           }
       }
-      res.status(401).render("Login",{error:true});
+      res.status(401).render("login",{error:true});
 });
 
-router.get("/private",(req,res) => {
-    try{
-        let user = currentUser(req.session.id);
-        let {_id, username, firstName, lastName, email, hashedPassword, bio, profilePic} = user;
-        res.render("Private",{"username":username, "firstName":firstName, "lastName":lastName,"email":email, "bio":bio, "profilePic":profilePic});
-    }catch(e){
-        res.sendStatus(500);
-    }
-});
-
-router.get("/logout", (req,res) => {
-    try{
-        req.session.destroy();
-        res.render("Main");
-    }catch(e){
-        res.sendStatus(500);
-    }
-});
+module.exports = router;

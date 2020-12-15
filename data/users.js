@@ -1,5 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
+const reviews = require('./reviews');
+const comments = require('./comments');
 const {ObjectId} = require("mongodb");
 
 const exportedMethods = {
@@ -32,7 +34,7 @@ const exportedMethods = {
       return user;
     },
 
-    async add(username, firstName, lastName, email, hashedPassword, bio, profilePic) {
+    async add(username, firstName, lastName, email, hashedPassword, bio) {
         // TODO: Get default profile pic, use as default if not provided
         //       See GridFS, Mongoose, HTML (type="image") for uploading image to server and storing here
 
@@ -44,7 +46,6 @@ const exportedMethods = {
         if (!email.trim()) throw "Data/Users.js/add: Email cannot be empty!";
         if (!hashedPassword.trim()) throw "Data/Users.js/add: HashedPassword cannot be empty!";
         if (!bio.trim()) throw "Data/Users.js/add: Bio cannot be empty!";
-        // Profile Pic
 
         const userCollection = await users();
 
@@ -55,7 +56,6 @@ const exportedMethods = {
             email: email,
             hashedPassword: hashedPassword,
             bio: bio,
-            profilePic: profilePic,
             reviews: [],
             comments: []
         };
@@ -79,7 +79,6 @@ const exportedMethods = {
           email: updatedUser.email,
           hashedPassword: updatedUser.hashedPassword,
           bio: updatedUser.bio,
-          profilePic: updatedUser.profilePic,
           reviews: user.reviews,
           comments: user.comments
         };
@@ -136,6 +135,14 @@ const exportedMethods = {
         if (!id) throw 'Data/Users.js/delete: You must provide an id!';
         if (typeof id !== "string") throw 'Data/Users.js/delete: ID needs to be a string!';
         const parsedId = ObjectId(id);
+
+        const user = await this.getById(id);
+        user.reviews.forEach(async r => {
+          await reviews.removeReview(r);
+        });
+        user.comments.foreach(async c => {
+          await comments.removeComment(c);
+        });
     
         const userCollection = await users();
         const deletionInfo = await userCollection.removeOne({ _id: parsedId });

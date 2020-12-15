@@ -12,8 +12,8 @@ async function main() {
 
     const password1 = await bcrypt.hash("abcde", 16);
     const password2 = await bcrypt.hash("12345", 16);
-    const user1 = await users.add("double chalupa box", "Scott", "Steiner", "lschaffn@stevens.edu", password1, "A short bio", 1);
-    const user2 = await users.add("cheesy gordita crunch combo", "Rick", "Steiner", "lschaffn@stevens.edu", password2, "A longer bio", 1);
+    const user1 = await users.add("Double Chalupa Box", "Scott", "Steiner", "lschaffn@stevens.edu", password1, "A short bio");
+    const user2 = await users.add("Cheesy Gordita Crunch Combo", "Rick", "Steiner", "lschaffn@stevens.edu", password2, "A longer bio");
 
     let restaurant1 = {
         name: "Starbucks",
@@ -33,7 +33,6 @@ async function main() {
         frequentTags: ['Awaiting more reviews']
     }
     restaurant1 = await restaurants.addRestaurant(restaurant1);
-    console.log(restaurant1._id);
 
     let restaurant2 = {
         name: "Dunkin Donuts",
@@ -55,13 +54,11 @@ async function main() {
     }
     restaurant2 = await restaurants.addRestaurant(restaurant2);
 
-    const review1 = await reviews.addReview("Good", restaurant1._id, user1._id, 5, "08/09/2020", "good restaurant", ["healthy"], 0, []);
-    const review2 = await reviews.addReview("Bad", restaurant2._id, user2._id, 1, "08/22/2020", "bad restaurant", [], 1, ['true']);
-    //await reviews.removeReview(review1._id.toString());
-    await reviews.addCommentToReview(review1._id.toString(), "5fbe1a3f71eceee5127ab577");
-    await reviews.removeCommentFromReview(review1._id.toString(), "5fbe19be336cf2b3ec765b69");
+    //const review1 = await reviews.addReview("Good", restaurant1._id.toString(), user1._id.toString(), 5, "08/09/2020", "good restaurant", ["healthy"]);
+    //const review2 = await reviews.addReview("Bad", restaurant2._id.toString(), user2._id.toString(), 1, "08/22/2020", "bad restaurant", []);
+    //const comment1 = await comments.addComment(user2._id.toString(), review1._id.toString(), "I agree with this review", "08/09/2020");
+    //const comment2 = await comments.addComment(user1._id.toString(), review2._id.toString(), "I don't agree with this review", "08/22/2020");
 
     await db.serverConfig.close();
 }
-
 main();

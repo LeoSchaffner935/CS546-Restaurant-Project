@@ -1,5 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
+const reviews = require('./reviews');
+const comments = require('./comments');
 const {ObjectId} = require("mongodb");
 
 const exportedMethods = {
@@ -133,6 +135,14 @@ const exportedMethods = {
         if (!id) throw 'Data/Users.js/delete: You must provide an id!';
         if (typeof id !== "string") throw 'Data/Users.js/delete: ID needs to be a string!';
         const parsedId = ObjectId(id);
+
+        const user = await this.getById(id);
+        user.reviews.forEach(r => {
+          await reviews.removeReview(r);
+        });
+        user.comments.foreach(c => {
+          await comments.removeComment(c);
+        });
     
         const userCollection = await users();
         const deletionInfo = await userCollection.removeOne({ _id: parsedId });

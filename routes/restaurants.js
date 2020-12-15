@@ -197,7 +197,11 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Rating is not a number' });
         return;
     }
-    //TODO dataOfReview
+    if (review.rating < 1 || review.rating > 5) {
+        res.status(400).json({ error: 'Rating must be from 1-5' });
+        return;
+    }
+    const dateOfReview = new Date();
     if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
         res.status(400).json({ error: 'Title is empty' });
         return;
@@ -210,8 +214,20 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Tags is not an array' });
         return;
     }
-    let newReview = await reviewData.addReview(review.title, restaurantId, review.user, review.rating, review.dateOfReview, review.content, review.tags, 0, [])
+    let newReview = await reviewData.addReview(review.title, restaurantId, review.user, review.rating, dateOfReview, review.content, review.tags);
     res.json(newReview);
+});
+
+router.put('/', async (req, res) => {
+    res.json("To be implemented");
+});
+
+router.patch('/', async (req, res) => {
+    res.json("To be implemented");
+});
+
+router.delete('/', async (req, res) => {
+    res.json("To be implemented");
 });
 
 module.exports = router;

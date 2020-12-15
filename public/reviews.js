@@ -24,10 +24,10 @@
         };
         $.ajax(requestConfig).then(function (responseMessage) {
           let newReview = $('<div></div>');
-          newReview.append($('<p></p>').text("Review by user:"));
-          newReview.append($('<p></p>').text("Title:"));
-          newReview.append($('<p></p>').text("Rating:"));
-          newReview.append($('<p></p>').text("Content:"));
+          newReview.append($('<a></a>').text("User: "));
+          newReview.append($('<p></p>').text("Title: "));
+          newReview.append($('<p></p>').text("Rating: "));
+          newReview.append($('<p></p>').text("Content: "));
           reviewList.append(newReview);
         });
       } 

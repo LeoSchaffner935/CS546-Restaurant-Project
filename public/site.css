@@ -52,7 +52,11 @@ h2 {
 li.restlist{
     text-align: center;
     list-style-position: inside;
+}
 
+dl.commlist{
+    text-align: center;
+    list-style-position: inside;
 }
 
 li.userlist{
@@ -84,3 +88,17 @@ li.userlist{
     background-color: #4CAF50;
     color: white;
   }
+
+  #bio{
+        height:150px;
+        font-size:14pt;
+  }
+
+  #content{
+    height:150px;
+    font-size:14pt;
+} 
+
+.centerthis{
+    text-align: center;
+}

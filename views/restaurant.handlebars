@@ -1,4 +1,10 @@
-<h1>{{restaurant.name}}</h1>
+<h1 id="restaurantName">{{restaurant.name}}</h1>
+<div id="map" style="width: 500px; height: 300px;"></div>
+<input id="lat" value="{{restaurant.location.latitude}}" hidden>
+<input id="lng" value="{{restaurant.location.longitude}}" hidden>
+<script src="../public/map.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBskmPgQebgU7FK6gkSZ8uaobapslNno7s&callback=initMap&libraries=&v=weekly"></script>
+
 <dl id="restaurantInfo">
     <dt>Location</dt>
     <dd>{{restaurant.location.address}}</dd>

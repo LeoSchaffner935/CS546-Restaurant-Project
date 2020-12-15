@@ -17,6 +17,7 @@
       let content = reviewContent.val();
       let title = reviewTitle.val();
       let rating = reviewRating.val();
+      let tags = $('#tags').val();
 
       if (!content.trim()) {
         error.text('Review Content Cannot Be Empty');
@@ -52,6 +53,7 @@
           newReview.append($('<h3></h3>').text(title));
           newReview.append($('<p></p>').text(new Date()));
           newReview.append($('<p></p>').text("Rating: "+rating));
+          newReview.append($('<p></p>').text("Tags: "+tags));
           newReview.append($('<p></p>').text(content));
           reviewList.append(newReview);
         });

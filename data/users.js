@@ -38,7 +38,6 @@ const exportedMethods = {
     if (!user.firstName || typeof user.firstName !== "string" || !user.firstName.trim()) throw "Data/Users.js/add: Invalid first name!";
     if (!user.lastName || typeof user.lastName !== "string" || !user.lastName.trim()) throw "Data/Users.js/add: Invalid last name!";
     if (!user.email || typeof user.email !== "string" || !user.email.trim()) throw "Data/Users.js/add: Invalid email!";
-    console.log(user.hashedPassword)
     if (!user.hashedPassword || typeof user.hashedPassword !== "string" || !user.hashedPassword.trim()) throw "Data/Users.js/add: Invalid hashed password!";
     if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) throw "Data/Users.js/add: Invalid bio!";
 

@@ -223,7 +223,13 @@ router.post('/:id/reviews', async (req, res) => {
         }
     }
     review.tags = newTags;
-    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags);
+
+    // Review Flagging, value stacks depending on length of review
+    let sReview = 0;
+    if (review.content.length <= 4) sReview++;
+    if (review.content.length <= 15) sReview++;
+
+    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags, sReview);
     newReview.username = req.session.user.username;
     res.json(newReview);
 });

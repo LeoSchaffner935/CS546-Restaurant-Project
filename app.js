@@ -16,11 +16,14 @@ app.use(session({
     secret:"secretcookiedontbiteit",
     resave:false,
     saveUninitialized:true
+    //cookie max age?
     })
 );
 
 app.use('/private', (req, res, next) => {
-    if (!req.session.user) return res.status(403).redirect('/login');
+    if (!req.session.user) return res.status(403).redirect('/login',{
+      error: 'Unauthorized!'
+    });
     else next();
 });
 

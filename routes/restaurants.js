@@ -67,6 +67,13 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: "owner's email address is incorrectly formatted" });
         return;
     }
+    let user;
+    try {
+        user = userData.getByEmail(restaurant.owner.toLowerCase());
+    } catch (e) {
+        res.status(404).json({ error: 'User with given email does not exist' });
+        return;
+    }
     if (!restaurant.categories || !Array.isArray(restaurant.categories)) {
         res.status(400).json({ error: 'categories must be properly defined' });
         return;

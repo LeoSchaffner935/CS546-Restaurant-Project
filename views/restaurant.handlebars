@@ -24,6 +24,7 @@
             <input id="content" name="content" type="text" placeholder="Type in review">
         </label>
         <input id="restaurantId" value="{{restaurant._id}}" hidden>
+        <input id="username" value="{{user.username}}" hidden>
         <button type="submit">Post</button>
     </form>
     <p id="error"></p>
@@ -32,7 +33,7 @@
 <div id="reviewList">
 {{#each restaurant.reviews}}
     <div id="review">
-        <p>Review Posted By: {{user.username}}</p>
+        <a href="/users/{{user.username}}">{{user.username}}</a>
         <p class="reviewTitle">{{title}}</p>
         <p>Rating: {{rating}}</p>
         <p>{{content}}</p>

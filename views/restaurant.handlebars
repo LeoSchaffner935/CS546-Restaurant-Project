@@ -47,8 +47,10 @@
         <label>Review
             <input id="content" name="content" type="text" placeholder="Type in review">
         </label>
-        <input id="restaurantId" value="{{restaurant._id}}" hidden>
-        <input id="username" value="{{user.username}}" hidden>
+        <label>Tags
+            <input id="tags" name="tags" type="text" placeholder="Type in review">
+        </label>
+        <input id="restaurantId" name="restaurantId" value="{{restaurant._id}}" hidden>
         <button type="submit">Post</button>
     </form>
     <p id="error"></p>

@@ -12,8 +12,8 @@ async function main() {
 
     const password1 = await bcrypt.hash("abcde", 16);
     const password2 = await bcrypt.hash("12345", 16);
-    const user1 = await users.add("Double Chalupa Box", "Scott", "Steiner", "lschaffn@stevens.edu", password1, "A short bio");
-    const user2 = await users.add("Cheesy Gordita Crunch Combo", "Rick", "Steiner", "lschaffn@stevens.edu", password2, "A longer bio");
+    const user1 = await users.add("double chalupa box", "Scott", "Steiner", "lschaffn@stevens.edu", password1, "A short bio");
+    const user2 = await users.add("cheesy gordita crunch combo", "Rick", "Steiner", "lschaffn@stevens.edu", password2, "A longer bio");
 
     let restaurant1 = {
         name: "Starbucks",

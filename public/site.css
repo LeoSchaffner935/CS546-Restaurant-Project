@@ -51,10 +51,14 @@ h2 {
 
 li.restlist{
     text-align: center;
+    list-style-position: inside;
+
 }
 
 li.userlist{
     text-align: center;
+    list-style-position: inside;
+
 }
 
 #navbar {
@@ -62,7 +66,6 @@ li.userlist{
     overflow: hidden;
   }
   
-  /* Style the links inside the navigation bar */
   #navbar a {
     float: left;
     color: #f2f2f2;

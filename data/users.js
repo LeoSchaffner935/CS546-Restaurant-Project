@@ -23,10 +23,18 @@ const exportedMethods = {
   },
 
   async getByUsername(username) {
-    if (!username || typeof username !== "string" || !username.trim()) throw 'Data/Users.js/getByUsername: Invalid username'
+    if (!username || typeof username !== "string" || !username.trim()) throw 'Data/Users.js/getByUsername: Invalid username';
     const userCollection = await users();
-    const user = await userCollection.findOne({ username: username });
+    const user = await userCollection.findOne({ username: username.toLowerCase() });
     if (!user) throw 'Data/Users.js/getByUsername: User not found!';
+    return user;
+  },
+
+  async getByEmail(email) {
+    if (!email || typeof email !== "string" || !email.trim()) throw 'Data/Users.js/getByEmail: Invalid email';
+    const userCollection = await users();
+    const user = await userCollection.findOne({ email: email.toLowerCase() });
+    if (!user) throw 'Data/Users.js/getByEmail: User not found!';
     return user;
   },
 
@@ -40,7 +48,8 @@ const exportedMethods = {
     if (!user.email || typeof user.email !== "string" || !user.email.trim()) throw "Data/Users.js/add: Invalid email!";
     if (!user.hashedPassword || typeof user.hashedPassword !== "string" || !user.hashedPassword.trim()) throw "Data/Users.js/add: Invalid hashed password!";
     if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) throw "Data/Users.js/add: Invalid bio!";
-
+    user.username = user.username.toLowerCase();
+    user.email = user.email.toLowerCase();
     const userCollection = await users();
     const newInsertInformation = await userCollection.insertOne(user);
     if (newInsertInformation.insertedCount === 0) throw 'Data/Users.js/add: Insert failed!';

@@ -31,7 +31,7 @@ router.get('/:username', async (req, res) => {
             comments: fullComments
         });
     } catch (e) {
-        res.status(404).json(e);
+        res.status(404).json({ error: 'User with given username not found' });
     }
 });
 
@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
         }
         let existingUser;
         try {
-            existingUser = await userData.getByUsername(user.username);
+            existingUser = await userData.getByUsername(user.username.toLowerCase());
         } catch (e) {
             console.log('username available');
         }

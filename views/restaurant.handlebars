@@ -63,6 +63,11 @@
         <p>{{dateOfReview}}</p>
         <p>Rating: {{rating}}</p>
         <p>{{content}}</p>
+        <dl>Comments</dl>
+        {{#each comments}}
+            <dt>{{this}}</dt>
+            <dd>{{this}}</dd>
+        {{/each}}
     </div>
 {{/each}}
 </div>

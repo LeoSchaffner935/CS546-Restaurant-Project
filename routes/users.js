@@ -13,13 +13,13 @@ router.get('/:username', async (req, res) => {
         const user = await userData.getByUsername(req.params.username);
 
         let fullReviews = [];
-        user.reviews.forEach(r => {
-            fullReviews.append(reviewData.getReviewById(r));
+        user.reviews.forEach(async r => {
+            fullReviews.append(await reviewData.getReviewById(r));
         });
 
         let fullComments = [];
-        user.comments.forEach(c => {
-            fullComments.append(commentData.getCommentById(c));
+        user.comments.forEach(async c => {
+            fullComments.append(await commentData.getCommentById(c));
         });
 
         res.render('user', {

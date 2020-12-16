@@ -16,6 +16,20 @@ input[type=text] {
     border-radius: 5px;
     }
 
+.reviewForm{
+        padding: 5px 15px;
+        background: rgb(235, 235, 160);
+        border: 0 none;
+        border-radius: 5px;
+    }
+
+input[type=number] {
+        padding: 5px 15px;
+        background: rgb(235, 235, 160);
+        border: 0 none;
+        border-radius: 5px;
+        }
+
 h3 {
     font-family: "Times New Roman";
     color: darkblue;
@@ -52,11 +66,13 @@ h2 {
 li.restlist{
     text-align: center;
     list-style-position: inside;
+
 }
 
 dl.commlist{
     text-align: center;
     list-style-position: inside;
+
 }
 
 li.userlist{
@@ -101,4 +117,9 @@ li.userlist{
 
 .centerthis{
     text-align: center;
+}
+
+.restElem{
+    font-weight: bold;
+    font-size: 18px;
 }

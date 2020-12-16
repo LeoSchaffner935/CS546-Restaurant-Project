@@ -2,7 +2,6 @@ const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
 const users = require("./users");
 const restaurants = require("./restaurants");
-// const comments = require("./comments");
 let { ObjectId } = require("mongodb");
 
 

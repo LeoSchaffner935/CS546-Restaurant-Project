@@ -537,4 +537,46 @@ router.delete('/:id/reviews/:reviewId', async (req, res) => {
     await restaurantData.removeReviewFromRestaurant(req.params.id, reviewId);
 });
 
+router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
+    if (!req.params.restaurantId) {
+        res.status(400).json({ error: 'restaurantId needed to add comments!' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'reviewId needed to add comments!' });
+        return;
+    }
+    try {
+        await restaurantData.getById(req.params.restaurantId);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    try {
+        await restaurantData.getById(req.params.reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found!' });
+        return;
+    }
+    if (!req.body) {
+        res.status(400).json({ error: 'Data needed to create a comment!' });
+        return;
+    }
+    let comment = req.body;
+    if (!comment.comment || typeof comment.comment !== "string" || !comment.comment.trim()) {
+        res.status(400).json({ error: 'comment cannot be empty!' });
+        return;
+    }
+    comment.userId = req.session.user._id;
+    comment.reviewId = req.params.reviewId;
+    comment.date = new Date();
+    try {
+        comment = await commentData.addComment(comment);
+    } catch (e) {
+        res.status(400).json({ error: 'Failed to add comment!' });
+        return;
+    }
+    res.json(comment);
+});
+
 module.exports = router;

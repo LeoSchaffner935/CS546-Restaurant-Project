@@ -11,80 +11,68 @@ const exportedMethods = {
         if (!id) {
             throw 'No id provided';
         }
-        if (typeof(id) != "string") {
+        if (typeof (id) != "string") {
             throw 'Invalid id provided';
         }
         const commentCollection = await comments();
-        const allComments = await commentCollection.find({ commenter: {$eq: id}}).toArray();
+        const allComments = await commentCollection.find({ commenter: { $eq: id } }).toArray();
         if (!allComments) {
             throw "No comments in system";
         }
         return allComments;
-      },
+    },
     //Find a specific comment by its id
     async getCommentById(id) {
         if (!id) {
             throw 'No id provided';
         }
-        if (typeof(id) != "string") {
+        if (typeof (id) != "string") {
             throw 'Invalid id provided';
         }
         let parsedId = ObjectId(id);
         const commentCollection = await comments();
-        const comment = await commentCollection.findOne({_id: parsedId });
+        const comment = await commentCollection.findOne({ _id: parsedId });
         if (!comment) {
             throw "No comment found for given id";
         }
         comment._id = id;
         return comment;
-      },
-      //Add a comment
-      async addComment(commenter, reviewId, comment, date) {
-        if (typeof commenter !== "string" || !commenter || commenter === "") {
+    },
+    //Add a comment
+    async addComment(comment) {
+        if (!comment.userId || typeof comment.userId !== "string" || !comment.userId.trim()) {
             throw 'Commenter must be a non-empty string';
         }
-        if (typeof reviewId !== "string" || !reviewId || reviewId === "") {
+        if (!comment.reviewId || typeof comment.reviewId !== "string" || !comment.reviewId.trim()) {
             throw 'Valid Review Id not supplied';
         }
-        if (typeof comment !== "string" || !comment || comment === "") {
+        if (!comment.comment || typeof comment.comment !== "string" || !comment.comment.trim()) {
             throw 'Valid Comment not entered';
         }
-        if (typeof date !== "string" || !date || date === "") {
-            throw 'Valid date was not supplied';
-        }
         const commentCollection = await comments();
-    
-        const currReview = await reviews.getReviewById(reviewId);
-        if (!currReview) {
-            throw "No such review exists";
-        }
-        let newComment = {
-          commenter: commenter,
-          reviewId: reviewId,
-          comment: comment,
-          date: date,
-        };
-        const newInsertInformation = await commentCollection.insertOne(newComment);
-        const newId = (newInsertInformation.insertedId).toString();
-        
+        const insertInfo = await commentCollection.insertOne(comment);
+        if (insertInfo.insertedCount === 0) throw 'Insertion failed!';
+        const newId = insertInfo.insertedId.toString();
+
         await reviews.addCommentToReview(reviewId, newId);
         await users.addCommentToUser(commenter, newId);
-
-      },
-      //Remove a comment
-      async removeComment(id) {
-        if (!id){
+        comment._id = newId;
+        return comment;
+    },
+    //Remove a comment
+    async removeComment(id) {
+        if (!id) {
             throw "No id was input";
         }
-        if (typeof(id) != "string" || id === ""){
+        if (typeof (id) != "string" || id === "") {
             throw "Comment id must be a non-empty string";
         }
         const commentCollection = await comments();
         let comment = null;
         try {
-          comment = await this.getCommentById(id);
+            comment = await this.getCommentById(id);
         } catch (e) {
-          throw "No comment with that id exists";
+            throw "No comment with that id exists";
         }
         let parsedId = ObjectId(id);
         const allComments = await comments();
@@ -94,10 +82,10 @@ const exportedMethods = {
         await users.removeCommentFromUser(removeIt.commenter, id);
 
 
-        const commentInfo = await allComments.removeOne({ _id: parsedId});
+        const commentInfo = await allComments.removeOne({ _id: parsedId });
         if (commentInfo.deletedCount == 0)
             throw 'Comment could not be deleted';
         return commentInfo;
-      }
+    }
 }
 module.exports = exportedMethods;

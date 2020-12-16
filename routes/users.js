@@ -94,7 +94,7 @@ router.post('/', async (req, res) => {
             email: savedUser.email,
             bio: savedUser.bio
         };
-        res.redirect('/restaurants');
+        res.redirect('/private');
     } catch (e) {
         res.status(400).json(e);
     }

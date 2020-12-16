@@ -37,7 +37,8 @@ router.get('/:id', async (req, res) => {
     let authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
-        authenticated: authenticated
+        authenticated: authenticated,
+        session: req.session.user
     });
 });
 

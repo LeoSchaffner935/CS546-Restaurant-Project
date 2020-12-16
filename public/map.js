@@ -103,7 +103,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
                         });
                     
                         const str = 
-                            `<h2>${res.name}</h2>` + 
+                            `<h2><a href="/restaurants/${res._id}">${res.name}</a></h2>` + 
                             `<p>${res.location.address}</p>`;
                         // content can be modified to add more stuff
                         const info = new google.maps.InfoWindow({

@@ -87,14 +87,14 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
             for (let restaurant of res.nearByRestaurants) {
                 let requestConfig2 = {
                     method: "GET",
-                    url: '/restaurants/' + $('#rId').val() + "/map",
+                    url: '/restaurants/' + restaurant + "/map",
                     data: {ajaxid: "1"}
                 }
                 $.ajax(requestConfig2).then(function (res){
                     if (res) {
                         let position = {};
-                        position.lat = 50.45;
-                        position.lng = 45.50;
+                        position.lat = res.location.latitude;
+                        position.lng = res.location.longitude;
                         
                         let mark = new google.maps.Marker({
                             position: position,

@@ -41,30 +41,11 @@ async function addReview(review) {
 }
 
 async function removeReview(id) {
-    if (!id) throw "Id does not exist";
-    if (typeof id != "string") throw "Id type invalid";
-
+    if (!id || typeof id !== "string" || !id.trim()) throw "Invalid id";
     let parsedId = ObjectId(id);
     const reviewCollection = await reviews();
-    const review = await this.getReviewById(id);
-
-    //TODO delete everything in routes layer
-    // try {
-    //     //TODO delete comments in 
-    //     // review.comments.forEach(async c => {
-    //     //     await comments.removeComment(c);
-    //     // });
-    //     await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
-    //     await users.removeReviewFromUser(review.user, id);
-    // } catch (e) {
-    //     console.log(e);
-    // }
-
-    const title = review.title;
     const deleteInfo = await reviewCollection.removeOne({ _id: parsedId });
     if (deleteInfo.deletedCount === 0) throw "Deletion failed";
-    console.log(`Review ${title} has been successfully deleted`);
-    return true;
 }
 
 async function updateReview(id, updatedReview) {

@@ -4,6 +4,7 @@ const data = require('../data');
 const restaurantData = data.restaurants;
 const reviewData = data.reviews;
 const userData = data.users;
+const commentData = data.comments;
 
 router.get('/', async (req, res) => {
     try {
@@ -295,7 +296,7 @@ router.put('/:id/reviews/:reviewId', async (req, res) => {
             if (!newTags.includes(tag.trim())) newTags.push(tag.trim());
         }
     }
-    if(newTags) {
+    if (newTags) {
         oldReview.tags = newTags;
     }
 
@@ -463,8 +464,70 @@ router.patch('/', async (req, res) => {
     res.json("To be implemented");
 });
 
-router.delete('/', async (req, res) => {
-    res.json("To be implemented");
+router.delete('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id needs to be specified for deleting a restaurant!' });
+        return;
+    }
+    let restaurant;
+    try {
+        restaurant = await restaurantData.getById(id);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    try {
+        await restaurantData.removeRestaurant(id);
+    } catch (e) {
+        res.status(500).json({ error: 'Restaurant could not be deleted!' });
+        return;
+    }
+    restaurant.reviews.forEach(reviewId => {
+        let fetchedReview = await reviewData.getById(reviewId);
+        await reviewData.removeReview(reviewId);
+        fetchedReview.comments.forEach(commentId => {
+            await commentData.removeComment(commentId);
+            await userData.removeCommentFromUser(commentId);
+        });
+        await userData.removeReviewFromUser(req.session.user._id, reviewId);
+    });
+});
+
+router.delete('/:id/reviews/:reviewId', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id needs to be specified for deleting a restaurant!' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'reviewId needs to be specified for deleting a review!' });
+        return;
+    }
+    let reviewId = req.params.reviewId;
+    try {
+        await restaurantData.getById(req.params.id);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    let review;
+    try {
+        review = await reviewData.getById(reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found!' });
+        return;
+    }
+    try {
+        await reviewData.removeReview(reviewId);
+    } catch (e) {
+        res.status(500).json({ error: 'Restaurant could not be deleted!' });
+        return;
+    }
+    review.comments.forEach(commentId => {
+        await commentData.removeComment(commentId);
+        await userData.removeCommentFromUser(commentId);
+    });
+    await userData.removeReviewFromUser(req.session.user._id, reviewId);
+    await restaurantData.removeReviewFromRestaurant(req.params.id, reviewId);
 });
 
 module.exports = router;

@@ -490,10 +490,10 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: 'Restaurant could not be deleted!' });
         return;
     }
-    restaurant.reviews.forEach(reviewId => {
+    restaurant.reviews.forEach(async reviewId => {
         let fetchedReview = await reviewData.getById(reviewId);
         await reviewData.removeReview(reviewId);
-        fetchedReview.comments.forEach(commentId => {
+        fetchedReview.comments.forEach(async commentId => {
             await commentData.removeComment(commentId);
             await userData.removeCommentFromUser(commentId);
         });
@@ -530,7 +530,7 @@ router.delete('/:id/reviews/:reviewId', async (req, res) => {
         res.status(500).json({ error: 'Restaurant could not be deleted!' });
         return;
     }
-    review.comments.forEach(commentId => {
+    review.comments.forEach(async commentId => {
         await commentData.removeComment(commentId);
         await userData.removeCommentFromUser(commentId);
     });

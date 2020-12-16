@@ -202,7 +202,7 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Rating must be from 1-5' });
         return;
     }
-    const dateOfReview = new Date();
+    review.dateOfReview = new Date();
     if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
         res.status(400).json({ error: 'Title is empty' });
         return;
@@ -222,13 +222,14 @@ router.post('/:id/reviews', async (req, res) => {
         }
     }
     review.tags = newTags;
+    review.comments = [];
 
     // Review Flagging, value stacks depending on length of review
     let sReview = 0;
     if (review.content.length <= 4) sReview++;
     if (review.content.length <= 15) sReview++;
 
-    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags, sReview);
+    let newReview = await reviewData.addReview(review);
     newReview.username = req.session.user.username;
     res.json(newReview);
 });

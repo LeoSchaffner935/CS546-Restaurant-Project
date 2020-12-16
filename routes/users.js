@@ -12,11 +12,23 @@ router.get('/:username', async (req, res) => {
         res.status(400).json({ error: 'Username cannot be empty' });
         return;
     }
-    let user = await userData.getByUsername(req.params.username.toLowerCase());
+    let user;
+    try {
+        user = await userData.getByUsername(req.params.username.toLowerCase());
+    } catch (e) {
+        res.status(404).json({ error: 'User not found!' });
+        return;
+    }
+    if (user.isDeleted) {
+        res.status(404).json({ error: 'This user has deleted their account!' });
+        return;
+    }
     let fullReviews = [];
+    console.log(user.reviews);
     user.reviews.forEach(async r => {
         fullReviews.push(await reviewData.getReviewById(r));
     });
+    console.log(fullReviews);
     user.reviews = fullReviews;
 
     let fullComments = [];
@@ -119,6 +131,17 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: 'Data must be provided to update user!' });
         return;
     }
+    let user;
+    try {
+        user = await userData.getById(req.params.id);
+    } catch (e) {
+        res.status(404).json({ error: 'User not found!' });
+        return;
+    }
+    if (user.isDeleted) {
+        res.status(404).json({ error: 'This user has deleted their account!' });
+        return;
+    }
     let user = req.body;
     if (!user.username || typeof user.username !== "stirng" || !user.username.trim()) {
         res.status(400).json({ error: 'Invalid username!' });
@@ -189,7 +212,21 @@ router.put('/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
     try {
-        if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/patch: Id must be a number!';
+        if (!req.params.id) {
+            res.status(400).json({ error: 'id must be provided to patch user fields!' });
+            return;
+        }
+        let user;
+        try {
+            user = await userData.getByUsername(req.params.username.toLowerCase());
+        } catch (e) {
+            res.status(404).json({ error: 'User not found!' });
+            return;
+        }
+        if (user.isDeleted) {
+            res.status(404).json({ error: 'This user has deleted their account!' });
+            return;
+        }
 
         if (!req.body) throw 'Routes/Users.js/post: You must provide data to create a user!';
         let updatedObject = {};
@@ -231,15 +268,34 @@ router.patch('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
-    try {
-        if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/delete: Id must be a number!';
-
-        const user = await userData.delete(req.params.id);
-
-        res.send("<h2>Account has successfully been deleted!</h2>");
-    } catch (e) {
-        res.status(400).json(e);
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id must be passed in the path!' });
+        return;
     }
+    if (req.params.id !== req.session.user._id) {
+        // TODO proper status code
+        res.status(403).json({ error: 'Cannot delete other users!' });
+        return;
+    }
+    let user;
+    try {
+        user = await userData.getByUsername(req.params.username.toLowerCase());
+    } catch (e) {
+        res.status(404).json({ error: 'User not found!' });
+        return;
+    }
+    if (user.isDeleted) {
+        res.status(404).json({ error: 'This user has already deleted their account!' });
+        return;
+    }
+    user.isDeleted = true;
+    try {
+        user = userData.update(req.params.id, user);
+    } catch (e) {
+        res.status(404).json({ error: 'User could not be deleted!' });
+        return;
+    }
+    res.send("<h2>Account has successfully been deleted!</h2>");
 });
 
 module.exports = router;

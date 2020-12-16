@@ -86,17 +86,16 @@ async function removeRestaurant(id) {
 }
 
 async function addReviewToRestaurant(restaurantId, reviewId) {
-    if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
-    if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
-    console.log('inside addReviewToRestaurant '+restaurantId);
+    if (!restaurantId || typeof restaurantId !== "string" || !restaurantId.trim()) throw 'Invalid restaurantId';
+    if (!reviewId || typeof reviewId !== "string" || !reviewId.trim()) throw 'Invalid reviewId';
     let parsedId = ObjectId(restaurantId);
     const restaurantsCollection = await restaurants();
     restaurantsCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
 }
 
 async function removeReviewFromRestaurant(restaurantId, reviewId) {
-    if (!restaurantId || typeof restaurantId !== "string") throw 'Invalid restaurantId';
-    if (!reviewId || typeof reviewId !== "string") throw 'Invalid reviewId';
+    if (!restaurantId || typeof restaurantId !== "string" || !restaurantId.trim()) throw 'Invalid restaurantId';
+    if (!reviewId || typeof reviewId !== "string" || !reviewId.trim()) throw 'Invalid reviewId';
     let parsedId = ObjectId(restaurantId);
     const restaurantsCollection = await restaurants();
     const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $pull: { reviews: reviewId } });

@@ -59,6 +59,24 @@ const exportedMethods = {
         comment._id = newId;
         return comment;
     },
+    async updateComment(id, comment) {
+        if (!id || typeof id !== "string" || !id.trim()) {
+            throw 'id must be a non-empty string';
+        }
+        if (!comment.userId || typeof comment.userId !== "string" || !comment.userId.trim()) {
+            throw 'userId must be a non-empty string';
+        }
+        if (!comment.reviewId || typeof comment.reviewId !== "string" || !comment.reviewId.trim()) {
+            throw 'Valid Review Id not supplied';
+        }
+        if (!comment.comment || typeof comment.comment !== "string" || !comment.comment.trim()) {
+            throw 'Valid Comment not entered';
+        }
+        let parsedId = ObjectId(id);
+        const commentCollection = await comments();
+        await commentCollection.updateOne({ _id: parsedId }, { $set: comment });
+        return this.getCommentById(id);
+    },
     //Remove a comment
     async removeComment(id) {
         if (!id) {

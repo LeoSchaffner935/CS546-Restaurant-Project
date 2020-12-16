@@ -102,34 +102,55 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     try {
-        if (isNan(parseInt(req.params.id))) throw 'Routes/Users.js/put: Id must be a number!';
+        if (!req.params.id) {
+            res.status(400).json({ error: 'id is required in the path' });
+            return;
+        }
+        if (req.params.id !== req.session.user._id) {
+            res.status(403).json({ error: 'Not allowed to edit other users!' });
+        }
+        if (!req.body) {
+            res.status(400).json({ error: 'Data must be provided to update user!' });
+            return;
+        }
+        let user = req.body;
+        if (!user.username || typeof user.username !== "stirng" || !user.username.trim()) {
+            res.status(400).json({ error: 'Invalid username!' });
+            return;
+        }
+        if (!user.firstName || typeof user.firstName !== "stirng" || !user.firstName.trim()) {
+            res.status(400).json({ error: 'Invalid firstName!' });
+            return;
+        }
+        if (!user.lastName || typeof user.lastName !== "stirng" || !user.lastName.trim()) {
+            res.status(400).json({ error: 'Invalid lastName!' });
+            return;
+        }
+        if (!user.email || typeof user.email !== "stirng" || !user.email.trim()) {
+            res.status(400).json({ error: 'Invalid email!' });
+            return;
+        }
+        if (!user.password || typeof user.password !== "stirng" || !user.password.trim()) {
+            res.status(400).json({ error: 'Invalid password!' });
+            return;
+        }
+        if (!user.bio || typeof user.bio !== "stirng" || !user.bio.trim()) {
+            res.status(400).json({ error: 'Invalid bio!' });
+            return;
+        }
+        // how does this work?
+        if (!emailValidator.validate(email)) {
+            res.status(400).json({ error: 'Invalid email!' });
+            return;
+        }
 
-        if (!req.body) throw 'Routes/Users.js/put: You must provide data to update a user!';
-        if (!req.body.username || !req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password || !req.body.bio) throw 'Routes/Users.js/put: Missing Input Field!';
+        user.hashedPassword = await bcrypt.hash(user.password, 16);
 
-        if (!req.body.username.trim()) throw "Routes/Users.js/put: Username cannot be empty!";
-        if (!req.body.firstName.trim()) throw "Routes/Users.js/put: FirstName cannot be empty!";
-        if (!req.body.lastName.trim()) throw "Routes/Users.js/put: LastName cannot be empty!";
-        if (!req.body.email.trim()) throw "Routes/Users.js/put: Email cannot be empty!";
-        if (!req.body.password.trim()) throw "Routes/Users.js/put: Password cannot be empty!";
-        if (!req.body.bio.trim()) throw "Routes/Users.js/put: Bio cannot be empty!";
-
-        if (!emailValidator.validate(email)) throw "Routes/Users.js/put: Email must be valid!";
-
-        const hashedPassword = await bcrypt.hash(req.body.password, 16);
-
-        const user = await userData.update(req.params.id, {
-            username: req.body.username,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.lastName,
-            hashedPassword: hashedPassword,
-            bio: req.body.bio
-        });
-
+        const user = await userData.update(req.params.id, user);
+        // check if we need this or redirect to /users/:id
         res.redirect('/private');
     } catch (e) {
-        res.status(400).json(e);
+        res.status(500).json({ error: 'Failed to update user!' });
     }
 });
 

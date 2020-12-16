@@ -46,8 +46,8 @@ async function main() {
         serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "1 Castle Point Terrace",
-            latitude: 50.50,
-            longitude: 45.45
+            latitude: 40.7447411,
+            longitude: -74.0465031
         },
         hours: { "Sunday": "8:00 AM - 6:00 PM", "Monday": "7:00 AM - 5:00 PM", "Tuesday": "8:00 AM - 9:00 PM", "Wednesday": "8:00 AM - 6:00 PM", "Thursday": "8:00 AM - 6:00 PM", "Friday": "8:00 AM - 6:00 PM", "Saturday": "10:00 AM - 6:00 PM" },
         frequentTags: ['Awaiting more reviews']

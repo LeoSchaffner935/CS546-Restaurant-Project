@@ -147,4 +147,4 @@ async function removeCommentFromUser(userId, commentId) {
 }
 
 
-module.exports = { getById, getAll, getByUsername, getByEmail, add, update, addReviewToUser, addCommentToUser, deleteUser, removeReviewFromUser, removeCommentFromUser };
+module.exports = { getById, getAll, getByUsername, getByEmail, add, update, addReviewToUser, addCommentToUser, removeReviewFromUser, removeCommentFromUser };

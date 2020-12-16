@@ -4,6 +4,7 @@ const data = require('../data');
 const restaurantData = data.restaurants;
 const reviewData = data.reviews;
 const userData = data.users;
+const commentData = data.comments;
 
 router.get('/', async (req, res) => {
     try {
@@ -242,6 +243,81 @@ router.post('/:id/reviews', async (req, res) => {
     res.json(newReview);
 });
 
+router.put('/:id/reviews/:reviewId', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'You must supply a restaurantId to edit a review' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'You must supply a reviewId to edit a review' });
+        return;
+    }
+    const restaurantId = req.params.id;
+    const reviewId = req.params.reviewId;
+    let review = req.body;
+    if (!review) {
+        res.status(400).json({ error: 'Data must be passed to edit a review' });
+        return;
+    }
+    try {
+        await restaurantData.getRestaurantById(restaurantId);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found with given id!' });
+        return;
+    }
+    let oldReview;
+    try {
+        oldReview = await reviewData.getById(reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found with given id!' });
+        return;
+    }
+    if (!review.rating || Number.isNaN(review.rating)) {
+        res.status(400).json({ error: 'Rating is not a number' });
+        return;
+    }
+    review.rating = parseInt(review.rating);
+    if (review.rating < 1 || review.rating > 5) {
+        res.status(400).json({ error: 'Rating must be from 1-5' });
+        return;
+    }
+    oldReview.rating = review.rating;
+    oldReview.dateOfReview = new Date();
+    if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
+        res.status(400).json({ error: 'Title is empty' });
+        return;
+    }
+    oldReview.title = review.title;
+    if (!review.content || typeof review.content !== "string" || !review.content.trim()) {
+        res.status(400).json({ error: 'Content is empty' });
+        return;
+    }
+    oldReview.content = review.content;
+    let newTags = [];
+    if (review.tags) {
+        if (typeof review.tags !== "string" || !review.tags.trim()) {
+            res.status(400).json({ error: 'Invalid tags' });
+            return;
+        }
+        for (tag of review.tags.split(",")) {
+            if (!newTags.includes(tag.trim())) newTags.push(tag.trim());
+        }
+    }
+    if (newTags) {
+        oldReview.tags = newTags;
+    }
+
+    // Review Flagging, value stacks depending on length of review
+    //TODO need to review this
+    let sReview = 0;
+    if (oldReview.content.length <= 4) sReview++;
+    if (oldReview.content.length <= 15) sReview++;
+
+    let updatedReview = await reviewData.updateReview(oldReview);
+    updatedReview.username = req.session.user.username;
+    res.json(updatedReview);
+});
+
 router.put('/:id', async (req, res) => {
     const allowedCategories = ['Fast Food', 'Ethnic', 'Fast Casual', 'Casual Dining', 'Premium Casual', 'Family Style', 'Fine Dining'];
     const allowedServiceModes = ['Dine-in', 'Takeaway', 'Delivery'];
@@ -395,8 +471,70 @@ router.patch('/', async (req, res) => {
     res.json("To be implemented");
 });
 
-router.delete('/', async (req, res) => {
-    res.json("To be implemented");
+router.delete('/:id', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id needs to be specified for deleting a restaurant!' });
+        return;
+    }
+    let restaurant;
+    try {
+        restaurant = await restaurantData.getById(id);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    try {
+        await restaurantData.removeRestaurant(id);
+    } catch (e) {
+        res.status(500).json({ error: 'Restaurant could not be deleted!' });
+        return;
+    }
+    restaurant.reviews.forEach(reviewId => {
+        let fetchedReview = await reviewData.getById(reviewId);
+        await reviewData.removeReview(reviewId);
+        fetchedReview.comments.forEach(commentId => {
+            await commentData.removeComment(commentId);
+            await userData.removeCommentFromUser(commentId);
+        });
+        await userData.removeReviewFromUser(req.session.user._id, reviewId);
+    });
+});
+
+router.delete('/:id/reviews/:reviewId', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id needs to be specified for deleting a restaurant!' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'reviewId needs to be specified for deleting a review!' });
+        return;
+    }
+    let reviewId = req.params.reviewId;
+    try {
+        await restaurantData.getById(req.params.id);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    let review;
+    try {
+        review = await reviewData.getById(reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found!' });
+        return;
+    }
+    try {
+        await reviewData.removeReview(reviewId);
+    } catch (e) {
+        res.status(500).json({ error: 'Restaurant could not be deleted!' });
+        return;
+    }
+    review.comments.forEach(commentId => {
+        await commentData.removeComment(commentId);
+        await userData.removeCommentFromUser(commentId);
+    });
+    await userData.removeReviewFromUser(req.session.user._id, reviewId);
+    await restaurantData.removeReviewFromRestaurant(req.params.id, reviewId);
 });
 
 module.exports = router;

@@ -8,95 +8,102 @@ const bcrypt = require('bcrypt');
 const emailValidator = require("email-validator");
 
 router.get('/:username', async (req, res) => {
-    try {
-        if (!req.params.username) {
-            res.status(400).json({ error: 'Username cannot be empty' });
-            return;
-        }
-        const user = await userData.getByUsername(req.params.username.toLowerCase());
-        let fullReviews = [];
-        user.reviews.forEach(async r => {
-            fullReviews.push(await reviewData.getReviewById(r));
-        });
-        user.reviews = fullReviews;
-
-        let fullComments = [];
-        user.comments.forEach(async c => {
-            fullComments.push(await commentData.getCommentById(c));
-        });
-        user.comments = fullComments;
-
-        res.render('user', {
-            user: user
-        });
-    } catch (e) {
-        res.status(404).json({ error: 'User with given username not found' });
+    if (!req.params.username) {
+        res.status(400).json({ error: 'Username cannot be empty' });
+        return;
     }
+    let user = await userData.getByUsername(req.params.username.toLowerCase());
+    let fullReviews = [];
+    user.reviews.forEach(async r => {
+        fullReviews.push(await reviewData.getReviewById(r));
+    });
+    user.reviews = fullReviews;
+
+    let fullComments = [];
+    user.comments.forEach(async c => {
+        fullComments.push(await commentData.getCommentById(c));
+    });
+    user.comments = fullComments;
+
+    res.render('user', {
+        user: user
+    });
 });
 
 router.post('/', async (req, res) => {
-    try {
-        if (!req.body) {
-            res.status(400).json({ error: 'Data must be provided to signup' });
-            return;
-        }
-        let user = req.body;
-        if (!user.username || typeof user.username !== "string" || !user.username.trim()) {
-            res.status(400).json({ error: 'username must be provided to signup' });
-            return;
-        }
-        let existingUser;
-        try {
-            existingUser = await userData.getByUsername(user.username.toLowerCase());
-        } catch (e) {
-            console.log('username available');
-        }
-        if (existingUser) {
-            // TODO select proper status
-            res.status(403).json({ error: 'username already exists in the database' });
-            return;
-        }
-        if (!user.firstName || typeof user.firstName !== "string" || !user.firstName.trim()) {
-            res.status(400).json({ error: 'Invalid First Name' });
-            return;
-        }
-        if (!user.lastName || typeof user.lastName !== "string" || !user.lastName.trim()) {
-            res.status(400).json({ error: 'Invalid Last Name' });
-            return;
-        }
-        if (!user.email || typeof user.email !== "string" || !user.email.trim()) {
-            res.status(400).json({ error: 'Invalid Email' });
-            return;
-        }
-        if (!user.password || typeof user.password !== "string" || !user.password.trim()) {
-            res.status(400).json({ error: 'Invalid Password' });
-            return;
-        }
-        if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) {
-            res.status(400).json({ error: 'Invalid Bio' });
-            return;
-        }
-        // TODO how does this work?
-        if (!emailValidator.validate(user.email)) {
-            res.status(400).json({ error: 'Invalid Email' });
-            return;
-        }
-        user.hashedPassword = await bcrypt.hash(user.password, 16); // Hash Password
-        user.reviews = [];
-        user.comments = [];
-        const savedUser = await userData.add(user);
-        req.session.user = {
-            _id: savedUser._id,
-            username: savedUser.username,
-            firstName: savedUser.firstName,
-            lastName: savedUser.lastName,
-            email: savedUser.email,
-            bio: savedUser.bio
-        };
-        res.redirect('/restaurants');
-    } catch (e) {
-        res.status(400).json(e);
+    if (!req.body) {
+        res.status(400).json({ error: 'Data must be provided to signup' });
+        return;
     }
+    let user = req.body;
+    if (!user.username || typeof user.username !== "string" || !user.username.trim()) {
+        res.status(400).json({ error: 'username must be provided to signup' });
+        return;
+    }
+    user.username = user.username.trim().toLowerCase();
+    let existingUsername;
+    try {
+        existingUsername = await userData.getByUsername(user.username);
+    } catch (e) {
+        console.log('username available');
+    }
+    if (existingUsername) {
+        // TODO select proper status
+        res.status(403).json({ error: 'username already exists in the database' });
+        return;
+    }
+    if (!user.firstName || typeof user.firstName !== "string" || !user.firstName.trim()) {
+        res.status(400).json({ error: 'Invalid First Name' });
+        return;
+    }
+    user.firstName = user.firstName.trim();
+    if (!user.lastName || typeof user.lastName !== "string" || !user.lastName.trim()) {
+        res.status(400).json({ error: 'Invalid Last Name' });
+        return;
+    }
+    user.lastName = user.lastName.trim();
+    if (!user.email || typeof user.email !== "string" || !user.email.trim()) {
+        res.status(400).json({ error: 'Invalid Email' });
+        return;
+    }
+    user.email = user.email.trim().toLowerCase();
+    let existingEmail;
+    try {
+        existingEmail = await userData.getByEmail(user.email);
+    } catch (e) {
+        console.log('username available');
+    }
+    if (existingEmail) {
+        // TODO select proper status
+        res.status(403).json({ error: 'email already exists in the database' });
+        return;
+    }
+    if (!user.password || typeof user.password !== "string" || !user.password.trim()) {
+        res.status(400).json({ error: 'Invalid Password' });
+        return;
+    }
+    if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) {
+        res.status(400).json({ error: 'Invalid Bio' });
+        return;
+    }
+    // TODO how does this work?
+    if (!emailValidator.validate(user.email)) {
+        res.status(400).json({ error: 'Invalid Email' });
+        return;
+    }
+    user.hashedPassword = await bcrypt.hash(user.password, 16); // Hash Password
+    user.reviews = [];
+    user.comments = [];
+    user = await userData.add(user);
+    req.session.user = {
+        _id: user._id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        bio: user.bio
+    };
+    res.redirect('/restaurants');
 });
 
 router.put('/:id', async (req, res) => {
@@ -117,10 +124,10 @@ router.put('/:id', async (req, res) => {
             res.status(400).json({ error: 'Invalid username!' });
             return;
         }
-        user.username = user.username.trim();
+        user.username = user.username.trim().toLowerCase();;
         let existingUsername;
         try {
-            existingUsername = await userData.getByUsername(user.username.toLowerCase());
+            existingUsername = await userData.getByUsername(user.username);
         } catch (e) {
             console.log('username in database');
         }
@@ -142,10 +149,10 @@ router.put('/:id', async (req, res) => {
             res.status(400).json({ error: 'Invalid email!' });
             return;
         }
-        user.email = user.email.trim();
+        user.email = user.email.trim().toLowerCase();
         let existingEmail;
         try {
-            existingEmail = await userData.getByEmail(user.email.toLowerCase());
+            existingEmail = await userData.getByEmail(user.email);
         } catch (e) {
             console.log('username in database');
         }

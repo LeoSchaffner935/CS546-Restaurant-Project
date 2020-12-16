@@ -5,5 +5,29 @@
     <p>Email: {{email}}</p>
     <p>Bio: {{bio}}</p>
 
-    <!-- TODO Add client JS to update information or delete account -->
+    <p>Edit Information</p>
+    <form action="/users/{{_id}}" method="POST">
+        <label>Username
+            <input id='username' name='username' placeholder="username" value="{{username}}">
+        </label>
+        <label>First Name
+            <input id='firstName' name='firstName' placeholder="First Name" value="{{firstName}}">
+        </label>
+        <label>Last Name
+            <input id='lastName' name='lastName' placeholder="Last Name" value="{{lastName}}">
+        </label>
+        <label>Email
+            <input id='email' name='email' placeholder="Email" value="{{email}}">
+        </label>
+        <label>Password
+            <input id='password' name='password' type="password" placeholder="Please fill in current or new password">
+        </label>
+        <label>Bio
+            <input id='bio' name='bio' placeholder="Bio" value="{{bio}}">
+        </label>
+        <input id="hiddenInput" name='hiddenInput' value='true' hidden>
+        <button type="submit">Submit</button>
+    </form>
+
+    <a id='delete' src='/users/{{_id}}'>Delete Account</a>
 </div>

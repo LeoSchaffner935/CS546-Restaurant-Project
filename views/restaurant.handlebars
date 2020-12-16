@@ -68,6 +68,7 @@
 {{#each restaurant.reviews}}
     <div id="review">
         <a href="/users/{{user.username}}">{{user.username}}</a>
+        <!-- Create if_eq handlebars helper -->
         <h3>{{title}}</h3>
         <p>{{dateOfReview}}</p>
         <p>Rating: {{rating}}</p>

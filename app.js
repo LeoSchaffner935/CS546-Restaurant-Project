@@ -1,3 +1,6 @@
+const emailValidator = require('email-validator');
+const userData = require('./data/users');
+
 const express = require('express');
 const app = express();
 const configRoutes = require('./routes');
@@ -12,20 +15,34 @@ app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.use(session({
-    name:"AuthCookie",
-    secret:"secretcookiedontbiteit",
-    resave:false,
-    saveUninitialized:true,
-    //cookie max age?
-    cookie: { maxAge: 100000 }
-    })
+  name: "AuthCookie",
+  secret: "secretcookiedontbiteit",
+  resave: false,
+  saveUninitialized: true,
+  //cookie max age?
+  cookie: { maxAge: 100000 }
+})
 );
 
 app.use('/private', (req, res, next) => {
-    if (!req.session.user) return res.status(403).redirect('/login',{
-      error: 'Unauthorized!'
-    });
+  if (!req.session.user) return res.status(403).redirect('/login', {
+    error: 'Unauthorized!'
+  });
+  else next();
+});
+
+app.use('/users/:id', (req, res, next) => {
+  if (req.method == 'POST') {
+    if (!req.body) {
+      res.status(400).json({ error: e });
+      return;
+    }
+    if (req.body.hiddenInput) {
+      req.method = 'PUT';
+      next();
+    }
     else next();
+  }
 });
 
 configRoutes(app);

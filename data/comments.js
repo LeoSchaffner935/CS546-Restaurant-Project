@@ -59,33 +59,32 @@ const exportedMethods = {
         comment._id = newId;
         return comment;
     },
-    //Remove a comment
-    async removeComment(id) {
-        if (!id) {
-            throw "No id was input";
+    async updateComment(id, comment) {
+        if (!id || typeof id !== "string" || !id.trim()) {
+            throw 'id must be a non-empty string';
         }
-        if (typeof (id) != "string" || id === "") {
-            throw "Comment id must be a non-empty string";
+        if (!comment.userId || typeof comment.userId !== "string" || !comment.userId.trim()) {
+            throw 'userId must be a non-empty string';
         }
-        const commentCollection = await comments();
-        let comment = null;
-        try {
-            comment = await this.getCommentById(id);
-        } catch (e) {
-            throw "No comment with that id exists";
+        if (!comment.reviewId || typeof comment.reviewId !== "string" || !comment.reviewId.trim()) {
+            throw 'Valid Review Id not supplied';
+        }
+        if (!comment.comment || typeof comment.comment !== "string" || !comment.comment.trim()) {
+            throw 'Valid Comment not entered';
         }
         let parsedId = ObjectId(id);
-        const allComments = await comments();
-        const removeIt = await this.getCommentsById(id);
-
-        await reviews.removeCommentFromReview(removeIt.reviewId, id);
-        await users.removeCommentFromUser(removeIt.commenter, id);
-
-
-        const commentInfo = await allComments.removeOne({ _id: parsedId });
-        if (commentInfo.deletedCount == 0)
-            throw 'Comment could not be deleted';
-        return commentInfo;
+        const commentCollection = await comments();
+        await commentCollection.updateOne({ _id: parsedId }, { $set: comment });
+        return this.getCommentById(id);
+    },
+    //Remove a comment
+    async removeComment(id) {
+        if (!id || typeof id !== "string" || !id.trim()) throw "Invalid id";
+        let parsedId = ObjectId(id);
+        const commentCollection = await comments();
+        const commentInfo = await commentCollection.removeOne({ _id: parsedId });
+        if (commentInfo.deletedCount == 0) throw 'Comment could not be deleted';
+        return this.getCommentById(id);
     }
 }
 module.exports = exportedMethods;

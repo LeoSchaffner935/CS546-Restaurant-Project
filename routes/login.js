@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
         res.status(400).render("login", { error: true });
     }
     const user = await userData.getByUsername(loginInfo.username);
-    if (!await bcrypt.compare(req.body.password, users[i].hashedPassword)) {
+    if (!await bcrypt.compare(req.body.password, user.hashedPassword)) {
         res.status(401).render("login", { error: true });
     }
     req.session.user = {

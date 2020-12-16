@@ -7,24 +7,24 @@
         {{#each user.reviews}}
             <dl id="userReview">
                 <dt>Title</dt>
-                <dd>{{this.title}}</dd>
+                <dd>{{title}}</dd>
 
                 <dt>Restaurant</dt>
-                <dd>{{this.restaurantReviewed}}</dd> <!-- Add link to restaurant -->
+                <dd>{{restaurantReviewed}}</dd> <!-- Add link to restaurant -->
 
                 <dt>Rating</dt>
-                <dd>{{this.rating}}</dd>
+                <dd>{{rating}}</dd>
 
                 <dt>Date</dt>
-                <dd>{{this.dateOfReview}}</dd>
+                <dd>{{dateOfReview}}</dd>
 
                 <dt>Tags</dt>
                 <dd><ul></ul></dd>
-                {{#each this.tags}}
+                {{#each tags}}
                     <li>{{this}}</li>
                 {{/each}}
 
-                <p>{{this.content}}</p>
+                <p>{{content}}</p>
             </dl>
         {{/each}}
     </div>

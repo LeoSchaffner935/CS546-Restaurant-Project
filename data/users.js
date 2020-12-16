@@ -17,9 +17,11 @@ const exportedMethods = {
 
   async getAll() {
     const userCollection = await users();
-    const userList = await userCollection.find({}).toArray();
-    if (!userList) throw 'Data/Users.js/getAll: No users in system!';
-    return userList;
+    let users = await userCollection.find({}).toArray();
+    for (user of users) {
+      user._id = user._id.toString();
+    }
+    return users;
   },
 
   async getByUsername(username) {
@@ -27,6 +29,7 @@ const exportedMethods = {
     const userCollection = await users();
     const user = await userCollection.findOne({ username: username.toLowerCase() });
     if (!user) throw 'Data/Users.js/getByUsername: User not found!';
+    user._id = user._id.toString();
     return user;
   },
 
@@ -35,6 +38,7 @@ const exportedMethods = {
     const userCollection = await users();
     const user = await userCollection.findOne({ email: email.toLowerCase() });
     if (!user) throw 'Data/Users.js/getByEmail: User not found!';
+    user._id = user._id.toString();
     return user;
   },
 
@@ -56,32 +60,25 @@ const exportedMethods = {
     return await this.getById(newInsertInformation.insertedId.toString());
   },
 
-  async update(id, updatedUser) {
-    if (!id) throw 'Data/Users.js/update: You must provide an id!';
-    if (typeof id !== "string") throw 'Data/Users.js/update: ID needs to be a string!';
+  async update(id, user) {
+    if (!id || typeof id !== "string" || !id.trim()) throw 'Data/Users.js/update: Invalid id!';
+    if (!user.username || typeof user.username !== "string" || !user.username.trim()) throw "Data/Users.js/add: Invalid username!";
+    if (!user.firstName || typeof user.firstName !== "string" || !user.firstName.trim()) throw "Data/Users.js/add: Invalid first name!";
+    if (!user.lastName || typeof user.lastName !== "string" || !user.lastName.trim()) throw "Data/Users.js/add: Invalid last name!";
+    if (!user.email || typeof user.email !== "string" || !user.email.trim()) throw "Data/Users.js/add: Invalid email!";
+    if (!user.hashedPassword || typeof user.hashedPassword !== "string" || !user.hashedPassword.trim()) throw "Data/Users.js/add: Invalid hashed password!";
+    if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) throw "Data/Users.js/add: Invalid bio!";
+    user.username = user.username.toLowerCase();
+    user.email = user.email.toLowerCase();
     const parsedId = ObjectId(id);
-
-    const user = await this.getById(id);
-
-    const userUpdateInfo = {
-      username: updatedUser.username,
-      firstName: updatedUser.firstName,
-      lastName: updatedUser.lastName,
-      email: updatedUser.email,
-      hashedPassword: updatedUser.hashedPassword,
-      bio: updatedUser.bio,
-      reviews: user.reviews,
-      comments: user.comments
-    };
-
     const userCollection = await users();
     const updateInfo = await userCollection.updateOne(
       { _id: parsedId },
-      { $set: userUpdateInfo }
+      { $set: user }
     );
     if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/update: Update failed!';
 
-    return await this.getById(id.toString());
+    return await this.getById(id);
   },
 
   async addReviewToUser(userId, reviewId) {

@@ -8,31 +8,33 @@ router.get("/", (req, res) => {
     res.render('login');
 });
 
-router.post("/", async (req,res) => {
-    if (!req.body.username || req.body.username.trim() == "") {
-        res.status(401).render("login",{error:true});
-      }
-      if (!req.body.password || req.body.password.trim() == "") {
-        res.status(401).render("login",{error:true});
-      }
-      const users = await userData.getAll();
-      let passMatch = false;
-      for (let i = 0; i < users.length; i++) {
-          passMatch = await bcrypt.compare(req.body.password, users[i].hashedPassword);
-          if (req.body.username === users[i].username && passMatch) {
-              req.session.user = {
-                  _id: users[i]._id,
-                  username: users[i].username,
-                  firstName: users[i].firstName,
-                  lastName: users[i].lastName,
-                  email: users[i].email,
-                  bio: users[i].bio
-              };
-              res.redirect('/private');
-              return;
-          }
-      }
-      res.status(401).render("login",{error:true});
+router.post("/", async (req, res) => {
+    if (!req.body) {
+        res.status(404).render("login", { error: true });
+        return;
+    }
+    let loginInfo = req.body;
+    if (!loginInfo.username || typeof loginInfo.username !== "string" || !loginInfo.username.trim()) {
+        res.status(400).render("login", { error: true });
+    }
+    loginInfo.username = loginInfo.username.trim().toLowerCase();
+    if (!loginInfo.password || typeof loginInfo.password !== "string" || !loginInfo.password.trim()) {
+        res.status(400).render("login", { error: true });
+    }
+    const user = await userData.getByUsername(loginInfo.username);
+    if (!await bcrypt.compare(req.body.password, users[i].hashedPassword)) {
+        res.status(401).render("login", { error: true });
+    }
+    req.session.user = {
+        _id: user._id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        bio: user.bio
+    };
+    res.redirect('/restaurants');
+    return;
 });
 
 module.exports = router;

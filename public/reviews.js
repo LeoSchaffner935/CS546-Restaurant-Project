@@ -4,7 +4,8 @@
       reviewTitle = $('#title'),
       reviewRating = $('#rating'),
       reviewList = $('#reviewList'),
-      error = $('#error');
+      error = $('#error'),
+      commentList = $('#commentList');
       
     error.hide();
   
@@ -58,6 +59,26 @@
           reviewList.append(newReview);
         });
       } 
+    });
+
+    commentForm.submit(function (event) {
+      let requestConfig = {
+        method: 'POST',
+        url: '/restaurants/' + $('#restaurantId').val() + '/reviews/' + $('#reviewId').val() + '/comments',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: $('#commentForm').serializeArray()
+      };
+      $.ajax(requestConfig).then(function (addedComment) {
+        let newComment = $('<div></div>');
+        let a = $('<a></a>').text(addedComment.username);
+        a.attr('href', "/users/"+addedComment.username)
+        newComment.append(a);
+        newComment.append($('<p></p>').text(new Date()));
+        newComment.append($('<p></p>').text(content));
+        commentList.append(newComment);
+      });
     });
 
 })(window.jQuery);  

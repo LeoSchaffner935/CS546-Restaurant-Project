@@ -82,14 +82,20 @@
                 <label>Post a Comment
                     <input id='comment' name='comment' type='text' placeholder="comment">
                 </label>
+                <input id='reviewId' name='reviewId' value='{{_id}}' hidden>
                 <button type="submit">Post</button>
             </form>
         {{/if}}
-        <dl>Comments</dl>
-        {{#each comments}}
-            <dt>{{this}}</dt>
-            <dd>{{this}}</dd>
-        {{/each}}
+        <h3>Comments</h3>
+        <div id='commentList'>
+            {{#each comments}}
+               <div id='comment'>
+               <a href=''>{{user}}</a>
+               <p>{{date}}</p>
+               <p>{{content}}</p>
+               </div>
+            {{/each}}
+        </div>
     </div>
 {{/each}}
 </div>

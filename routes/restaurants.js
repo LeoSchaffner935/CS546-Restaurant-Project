@@ -664,6 +664,8 @@ router.delete('/:restaurantId/reviews/:reviewId/comments/:commentId', async (req
         res.status(400).json({ error: 'Failed to add comment!' });
         return;
     }
+    await reviewData.removeCommentFromReview(comment.reviewId, id);
+    await userData.removeCommentFromUser(comment.userId, id);
     res.json(comment);
 });
 

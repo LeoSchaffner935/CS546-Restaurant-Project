@@ -2,7 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 const reviews = mongoCollections.reviews;
 const users = require("./users");
 const restaurants = require("./restaurants");
-const comments = require("./comments");
+// const comments = require("./comments");
 let { ObjectId } = require("mongodb");
 
 
@@ -48,15 +48,17 @@ async function removeReview(id) {
     const reviewCollection = await reviews();
     const review = await this.getReviewById(id);
 
-    try {
-        review.comments.forEach(async c => {
-            await comments.removeComment(c);
-        });
-        await restaurants().removeReviewFromRestaurant(review.restaurantReviewed, id);
-        await users().removeReviewFromUser(review.user, id);
-    } catch (e) {
-        console.log(e);
-    }
+    //TODO delete everything in routes layer
+    // try {
+    //     //TODO delete comments in 
+    //     // review.comments.forEach(async c => {
+    //     //     await comments.removeComment(c);
+    //     // });
+    //     await restaurants.removeReviewFromRestaurant(review.restaurantReviewed, id);
+    //     await users.removeReviewFromUser(review.user, id);
+    // } catch (e) {
+    //     console.log(e);
+    // }
 
     const title = review.title;
     const deleteInfo = await reviewCollection.removeOne({ _id: parsedId });
@@ -78,13 +80,7 @@ async function updateReview(id, updatedReview) {
     }*/
     let parsedId = ObjectId(id);
     const reviewCollection = await reviews();
-    const updateInfo = await reviewCollection.updateOne(
-        { _id: parsedId },
-        { $set: updatedReview }
-    );
-    if (!updateInfo.matchedCount && !updateInfo.modifiedCount) {
-        throw "Update failed";
-    }
+    await reviewCollection.updateOne({ _id: parsedId }, { $set: updatedReview });
     return await this.getReviewById(id);
 }
 

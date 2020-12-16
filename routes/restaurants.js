@@ -177,11 +177,11 @@ router.post('/', async (req, res) => {
 
 router.post('/:id/reviews', async (req, res) => {
     if (!req.params.id) {
-        res.status(400).json({ error: 'You must Supply an ID to get' });
+        res.status(400).json({ error: 'You must supply a restaurantId to create a review' });
         return;
     }
     const restaurantId = req.params.id;
-    const review = req.body;
+    let review = req.body;
     if (!review) {
         res.status(400).json({ error: 'Data must be passed to add a review' });
         return;
@@ -225,6 +225,7 @@ router.post('/:id/reviews', async (req, res) => {
     review.comments = [];
 
     // Review Flagging, value stacks depending on length of review
+    //TODO need to review this. Where does sReview go and save?
     let sReview = 0;
     if (review.content.length <= 4) sReview++;
     if (review.content.length <= 15) sReview++;
@@ -232,6 +233,81 @@ router.post('/:id/reviews', async (req, res) => {
     let newReview = await reviewData.addReview(review);
     newReview.username = req.session.user.username;
     res.json(newReview);
+});
+
+router.put('/:id/reviews/:reviewId', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'You must supply a restaurantId to edit a review' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'You must supply a reviewId to edit a review' });
+        return;
+    }
+    const restaurantId = req.params.id;
+    const reviewId = req.params.reviewId;
+    let review = req.body;
+    if (!review) {
+        res.status(400).json({ error: 'Data must be passed to edit a review' });
+        return;
+    }
+    try {
+        await restaurantData.getRestaurantById(restaurantId);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found with given id!' });
+        return;
+    }
+    let oldReview;
+    try {
+        oldReview = await reviewData.getById(reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found with given id!' });
+        return;
+    }
+    if (!review.rating || Number.isNaN(review.rating)) {
+        res.status(400).json({ error: 'Rating is not a number' });
+        return;
+    }
+    review.rating = parseInt(review.rating);
+    if (review.rating < 1 || review.rating > 5) {
+        res.status(400).json({ error: 'Rating must be from 1-5' });
+        return;
+    }
+    oldReview.rating = review.rating;
+    oldReview.dateOfReview = new Date();
+    if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
+        res.status(400).json({ error: 'Title is empty' });
+        return;
+    }
+    oldReview.title = review.title;
+    if (!review.content || typeof review.content !== "string" || !review.content.trim()) {
+        res.status(400).json({ error: 'Content is empty' });
+        return;
+    }
+    oldReview.content = review.content;
+    let newTags = [];
+    if (review.tags) {
+        if (typeof review.tags !== "string" || !review.tags.trim()) {
+            res.status(400).json({ error: 'Invalid tags' });
+            return;
+        }
+        for (tag of review.tags.split(",")) {
+            if (!newTags.includes(tag.trim())) newTags.push(tag.trim());
+        }
+    }
+    if(newTags) {
+        oldReview.tags = newTags;
+    }
+
+    // Review Flagging, value stacks depending on length of review
+    //TODO need to review this
+    let sReview = 0;
+    if (oldReview.content.length <= 4) sReview++;
+    if (oldReview.content.length <= 15) sReview++;
+
+    let updatedReview = await reviewData.updateReview(oldReview);
+    updatedReview.username = req.session.user.username;
+    res.json(updatedReview);
 });
 
 router.put('/:id', async (req, res) => {

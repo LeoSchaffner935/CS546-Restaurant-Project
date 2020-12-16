@@ -1,10 +1,10 @@
 <div id="userInfo">
-    <h1>{{username}}</h1>
-    <p>{{firstName}} {{lastName}}</p>
-    <p>Bio: {{bio}}</p>
+    <h1>{{user.username}}</h1>
+    <p>{{user.firstName}} {{user.lastName}}</p>
+    <p>Bio: {{user.bio}}</p>
     <div id="userReviews">
         <h2>Reviews</h2>
-        {{#each reviews}}
+        {{#each user.reviews}}
             <dl id="userReview">
                 <dt>Title</dt>
                 <dd>{{this.title}}</dd>
@@ -30,7 +30,7 @@
     </div>
     <div id="userComments">
         <h2>Comments</h2>
-        {{#each comments}}
+        {{#each user.comments}}
             <dl id="userComment">
                 <dt>Date</dt>
                 <dd>{{this.date}}</dd>

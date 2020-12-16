@@ -92,6 +92,7 @@ router.post('/', async (req, res) => {
         return;
     }
     user.hashedPassword = await bcrypt.hash(user.password, 16); // Hash Password
+    delete user.password;
     user.reviews = [];
     user.comments = [];
     user = await userData.add(user);
@@ -107,86 +108,83 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    try {
-        if (!req.params.id) {
-            res.status(400).json({ error: 'id is required in the path' });
-            return;
-        }
-        if (req.params.id !== req.session.user._id) {
-            res.status(403).json({ error: 'Not allowed to edit other users!' });
-        }
-        if (!req.body) {
-            res.status(400).json({ error: 'Data must be provided to update user!' });
-            return;
-        }
-        let user = req.body;
-        if (!user.username || typeof user.username !== "stirng" || !user.username.trim()) {
-            res.status(400).json({ error: 'Invalid username!' });
-            return;
-        }
-        user.username = user.username.trim().toLowerCase();;
-        let existingUsername;
-        try {
-            existingUsername = await userData.getByUsername(user.username);
-        } catch (e) {
-            console.log('username in database');
-        }
-        if (existingUsername && existingUsername._id !== req.params.id) {
-            res.status(400).json({ error: 'username already associated with another user!' });
-            return;
-        }
-        if (!user.firstName || typeof user.firstName !== "stirng" || !user.firstName.trim()) {
-            res.status(400).json({ error: 'Invalid firstName!' });
-            return;
-        }
-        user.firstName = user.firstName.trim();
-        if (!user.lastName || typeof user.lastName !== "stirng" || !user.lastName.trim()) {
-            res.status(400).json({ error: 'Invalid lastName!' });
-            return;
-        }
-        user.lastName = user.lastName.trim();
-        if (!user.email || typeof user.email !== "stirng" || !user.email.trim()) {
-            res.status(400).json({ error: 'Invalid email!' });
-            return;
-        }
-        user.email = user.email.trim().toLowerCase();
-        let existingEmail;
-        try {
-            existingEmail = await userData.getByEmail(user.email);
-        } catch (e) {
-            console.log('username in database');
-        }
-        if (existingEmail && existingEmail.email !== user.email) {
-            res.status(400).json({ error: 'email already associated with another user!' });
-            return;
-        }
-        if (!user.password || typeof user.password !== "stirng" || !user.password.trim()) {
-            res.status(400).json({ error: 'Invalid password!' });
-            return;
-        }
-        if (!user.bio || typeof user.bio !== "stirng" || !user.bio.trim()) {
-            res.status(400).json({ error: 'Invalid bio!' });
-            return;
-        }
-        // how does this work?
-        if (!emailValidator.validate(email)) {
-            res.status(400).json({ error: 'Invalid email!' });
-            return;
-        }
-        user.hashedPassword = await bcrypt.hash(user.password, 16);
-        user = await userData.update(req.params.id, user);
-        req.session.user = {
-            _id: user._id,
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            bio: user.bio
-        };
-        res.redirect('/user/' + user.username);
-    } catch (e) {
-        res.status(500).json({ error: 'Failed to update user!' });
+    if (!req.params.id) {
+        res.status(400).json({ error: 'id is required in the path' });
+        return;
     }
+    if (req.params.id !== req.session.user._id) {
+        res.status(403).json({ error: 'Not allowed to edit other users!' });
+    }
+    if (!req.body) {
+        res.status(400).json({ error: 'Data must be provided to update user!' });
+        return;
+    }
+    let user = req.body;
+    if (!user.username || typeof user.username !== "stirng" || !user.username.trim()) {
+        res.status(400).json({ error: 'Invalid username!' });
+        return;
+    }
+    user.username = user.username.trim().toLowerCase();;
+    let existingUsername;
+    try {
+        existingUsername = await userData.getByUsername(user.username);
+    } catch (e) {
+        console.log('username in database');
+    }
+    if (existingUsername && existingUsername._id !== req.params.id) {
+        res.status(400).json({ error: 'username already associated with another user!' });
+        return;
+    }
+    if (!user.firstName || typeof user.firstName !== "stirng" || !user.firstName.trim()) {
+        res.status(400).json({ error: 'Invalid firstName!' });
+        return;
+    }
+    user.firstName = user.firstName.trim();
+    if (!user.lastName || typeof user.lastName !== "stirng" || !user.lastName.trim()) {
+        res.status(400).json({ error: 'Invalid lastName!' });
+        return;
+    }
+    user.lastName = user.lastName.trim();
+    if (!user.email || typeof user.email !== "stirng" || !user.email.trim()) {
+        res.status(400).json({ error: 'Invalid email!' });
+        return;
+    }
+    user.email = user.email.trim().toLowerCase();
+    let existingEmail;
+    try {
+        existingEmail = await userData.getByEmail(user.email);
+    } catch (e) {
+        console.log('username in database');
+    }
+    if (existingEmail && existingEmail.email !== user.email) {
+        res.status(400).json({ error: 'email already associated with another user!' });
+        return;
+    }
+    if (!user.password || typeof user.password !== "stirng" || !user.password.trim()) {
+        res.status(400).json({ error: 'Invalid password!' });
+        return;
+    }
+    if (!user.bio || typeof user.bio !== "stirng" || !user.bio.trim()) {
+        res.status(400).json({ error: 'Invalid bio!' });
+        return;
+    }
+    // how does this work?
+    if (!emailValidator.validate(email)) {
+        res.status(400).json({ error: 'Invalid email!' });
+        return;
+    }
+    user.hashedPassword = await bcrypt.hash(user.password, 16);
+    delete user.password;
+    user = await userData.update(req.params.id, user);
+    req.session.user = {
+        _id: user._id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        bio: user.bio
+    };
+    res.redirect('/user/' + user.username);
 });
 
 router.patch('/:id', async (req, res) => {

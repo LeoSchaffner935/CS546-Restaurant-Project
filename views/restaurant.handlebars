@@ -1,9 +1,10 @@
 <h1 id="restaurantName">{{restaurant.name}}</h1>
+
 <div id="map" style="width: 500px; height: 300px;"></div>
 <input id="lat" value="{{restaurant.location.latitude}}" hidden>
 <input id="lng" value="{{restaurant.location.longitude}}" hidden>
-<script src="../public/map.js"></script>
-<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBskmPgQebgU7FK6gkSZ8uaobapslNno7s&callback=initMap&libraries=&v=weekly"></script>
+<input id="ad" value="{{restaurant.location.address}}" hidden>
+<input id="rId" value="{{restaurant._id}}" hidden>
 
 <dl id="restaurantInfo">
     <dt>Location</dt>
@@ -67,6 +68,7 @@
 {{#each restaurant.reviews}}
     <div id="review">
         <a href="/users/{{user.username}}">{{user.username}}</a>
+        <!-- Create if_eq handlebars helper -->
         <h3>{{title}}</h3>
         <p>{{dateOfReview}}</p>
         <p>Rating: {{rating}}</p>
@@ -87,6 +89,8 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         crossorigin="anonymous"></script>
 <script src="../public/reviews.js"></script>
+<script src="../public/map.js"></script>
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBskmPgQebgU7FK6gkSZ8uaobapslNno7s&callback=initMap&libraries=&v=weekly"></script>
 
 <!--tags, user with link, review
 if user logged in who posted the review, update and delete button-->

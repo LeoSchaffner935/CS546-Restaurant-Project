@@ -38,8 +38,18 @@ router.get('/:id', async (req, res) => {
     let authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
-        authenticated: authenticated
+        authenticated: authenticated,
+        session: req.session.user
     });
+});
+
+router.get('/:id/map', async (req, res) => {
+    if (req.query.ajaxid === "1") {
+        const restaurant = await restaurantData.getRestaurantById(req.params.id);
+        res.send(restaurant);
+    } else {
+        res.sendStatus(404);
+    }
 });
 
 router.post('/', async (req, res) => {
@@ -178,11 +188,11 @@ router.post('/', async (req, res) => {
 
 router.post('/:id/reviews', async (req, res) => {
     if (!req.params.id) {
-        res.status(400).json({ error: 'You must supply a restaurantId to create a review' });
+        res.status(400).json({ error: 'You must Supply an ID to get' });
         return;
     }
     const restaurantId = req.params.id;
-    let review = req.body;
+    const review = req.body;
     if (!review) {
         res.status(400).json({ error: 'Data must be passed to add a review' });
         return;
@@ -203,7 +213,7 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Rating must be from 1-5' });
         return;
     }
-    review.dateOfReview = new Date();
+    const dateOfReview = new Date();
     if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
         res.status(400).json({ error: 'Title is empty' });
         return;
@@ -223,15 +233,13 @@ router.post('/:id/reviews', async (req, res) => {
         }
     }
     review.tags = newTags;
-    review.comments = [];
 
     // Review Flagging, value stacks depending on length of review
-    //TODO need to review this. Where does sReview go and save?
     let sReview = 0;
     if (review.content.length <= 4) sReview++;
     if (review.content.length <= 15) sReview++;
 
-    let newReview = await reviewData.addReview(review);
+    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags, sReview);
     newReview.username = req.session.user.username;
     res.json(newReview);
 });
@@ -477,10 +485,10 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ error: 'Restaurant could not be deleted!' });
         return;
     }
-    restaurant.reviews.forEach(reviewId => {
+    restaurant.reviews.forEach(async reviewId => {
         let fetchedReview = await reviewData.getById(reviewId);
         await reviewData.removeReview(reviewId);
-        fetchedReview.comments.forEach(commentId => {
+        fetchedReview.comments.forEach(async commentId => {
             await commentData.removeComment(commentId);
             await userData.removeCommentFromUser(commentId);
         });
@@ -517,7 +525,7 @@ router.delete('/:id/reviews/:reviewId', async (req, res) => {
         res.status(500).json({ error: 'Restaurant could not be deleted!' });
         return;
     }
-    review.comments.forEach(commentId => {
+    review.comments.forEach(async commentId => {
         await commentData.removeComment(commentId);
         await userData.removeCommentFromUser(commentId);
     });

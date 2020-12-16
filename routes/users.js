@@ -141,7 +141,7 @@ router.put('/:id', async (req, res) => {
         return;
     }
     user = req.body;
-    if (!user.username || typeof user.username !== "stirng" || !user.username.trim()) {
+    if (!user.username || typeof user.username !== "string" || !user.username.trim()) {
         res.status(400).json({ error: 'Invalid username!' });
         return;
     }
@@ -156,17 +156,17 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: 'username already associated with another user!' });
         return;
     }
-    if (!user.firstName || typeof user.firstName !== "stirng" || !user.firstName.trim()) {
+    if (!user.firstName || typeof user.firstName !== "string" || !user.firstName.trim()) {
         res.status(400).json({ error: 'Invalid firstName!' });
         return;
     }
     user.firstName = user.firstName.trim();
-    if (!user.lastName || typeof user.lastName !== "stirng" || !user.lastName.trim()) {
+    if (!user.lastName || typeof user.lastName !== "string" || !user.lastName.trim()) {
         res.status(400).json({ error: 'Invalid lastName!' });
         return;
     }
     user.lastName = user.lastName.trim();
-    if (!user.email || typeof user.email !== "stirng" || !user.email.trim()) {
+    if (!user.email || typeof user.email !== "string" || !user.email.trim()) {
         res.status(400).json({ error: 'Invalid email!' });
         return;
     }
@@ -181,16 +181,15 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: 'email already associated with another user!' });
         return;
     }
-    if (!user.password || typeof user.password !== "stirng" || !user.password.trim()) {
+    if (!user.password || typeof user.password !== "string" || !user.password.trim()) {
         res.status(400).json({ error: 'Invalid password!' });
         return;
     }
-    if (!user.bio || typeof user.bio !== "stirng" || !user.bio.trim()) {
+    if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) {
         res.status(400).json({ error: 'Invalid bio!' });
         return;
     }
-    // how does this work?
-    if (!emailValidator.validate(email)) {
+    if (!emailValidator.validate(user.email)) {
         res.status(400).json({ error: 'Invalid email!' });
         return;
     }
@@ -205,7 +204,8 @@ router.put('/:id', async (req, res) => {
         email: user.email,
         bio: user.bio
     };
-    res.redirect('/user/' + user.username);
+    res.render("private", req.session.user);
+    return;
 });
 
 router.delete('/:id', async (req, res) => {

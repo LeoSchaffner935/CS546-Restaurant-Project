@@ -9,26 +9,25 @@ const emailValidator = require("email-validator");
 
 router.get('/:username', async (req, res) => {
     try {
-        // Check Format of Username
+        if (!req.params.username) {
+            res.status(400).json({ error: 'Username cannot be empty' });
+            return;
+        }
         const user = await userData.getByUsername(req.params.username.toLowerCase());
-
         let fullReviews = [];
         user.reviews.forEach(async r => {
             fullReviews.push(await reviewData.getReviewById(r));
         });
+        user.reviews = fullReviews;
 
         let fullComments = [];
         user.comments.forEach(async c => {
             fullComments.push(await commentData.getCommentById(c));
         });
+        user.comments = fullComments;
 
         res.render('user', {
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            bio: user.bio,
-            reviews: fullReviews,
-            comments: fullComments
+            user: user
         });
     } catch (e) {
         res.status(404).json({ error: 'User with given username not found' });
@@ -118,16 +117,40 @@ router.put('/:id', async (req, res) => {
             res.status(400).json({ error: 'Invalid username!' });
             return;
         }
+        user.username = user.username.trim();
+        let existingUsername;
+        try {
+            existingUsername = await userData.getByUsername(user.username.toLowerCase());
+        } catch (e) {
+            console.log('username in database');
+        }
+        if (existingUsername && existingUsername._id !== req.params.id) {
+            res.status(400).json({ error: 'username already associated with another user!' });
+            return;
+        }
         if (!user.firstName || typeof user.firstName !== "stirng" || !user.firstName.trim()) {
             res.status(400).json({ error: 'Invalid firstName!' });
             return;
         }
+        user.firstName = user.firstName.trim();
         if (!user.lastName || typeof user.lastName !== "stirng" || !user.lastName.trim()) {
             res.status(400).json({ error: 'Invalid lastName!' });
             return;
         }
+        user.lastName = user.lastName.trim();
         if (!user.email || typeof user.email !== "stirng" || !user.email.trim()) {
             res.status(400).json({ error: 'Invalid email!' });
+            return;
+        }
+        user.email = user.email.trim();
+        let existingEmail;
+        try {
+            existingEmail = await userData.getByEmail(user.email.toLowerCase());
+        } catch (e) {
+            console.log('username in database');
+        }
+        if (existingEmail && existingEmail.email !== user.email) {
+            res.status(400).json({ error: 'email already associated with another user!' });
             return;
         }
         if (!user.password || typeof user.password !== "stirng" || !user.password.trim()) {
@@ -143,12 +166,17 @@ router.put('/:id', async (req, res) => {
             res.status(400).json({ error: 'Invalid email!' });
             return;
         }
-
         user.hashedPassword = await bcrypt.hash(user.password, 16);
-
-        const user = await userData.update(req.params.id, user);
-        // check if we need this or redirect to /users/:id
-        res.redirect('/private');
+        user = await userData.update(req.params.id, user);
+        req.session.user = {
+            _id: user._id,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            bio: user.bio
+        };
+        res.redirect('/user/' + user.username);
     } catch (e) {
         res.status(500).json({ error: 'Failed to update user!' });
     }

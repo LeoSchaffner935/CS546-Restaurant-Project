@@ -71,15 +71,14 @@ const exportedMethods = {
     user.username = user.username.toLowerCase();
     user.email = user.email.toLowerCase();
     const parsedId = ObjectId(id);
-    const user = await this.getById(id);
     const userCollection = await users();
     const updateInfo = await userCollection.updateOne(
       { _id: parsedId },
-      { $set: userUpdateInfo }
+      { $set: user }
     );
     if (!updateInfo.matchedCount && !updateInfo.modifiedCount) throw 'Data/Users.js/update: Update failed!';
 
-    return await this.getById(id.toString());
+    return await this.getById(id);
   },
 
   async addReviewToUser(userId, reviewId) {

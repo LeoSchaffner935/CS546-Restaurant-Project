@@ -79,31 +79,12 @@ const exportedMethods = {
     },
     //Remove a comment
     async removeComment(id) {
-        if (!id) {
-            throw "No id was input";
-        }
-        if (typeof (id) != "string" || id === "") {
-            throw "Comment id must be a non-empty string";
-        }
-        const commentCollection = await comments();
-        let comment = null;
-        try {
-            comment = await this.getCommentById(id);
-        } catch (e) {
-            throw "No comment with that id exists";
-        }
+        if (!id || typeof id !== "string" || !id.trim()) throw "Invalid id";
         let parsedId = ObjectId(id);
-        const allComments = await comments();
-        const removeIt = await this.getCommentsById(id);
-
-        await reviews.removeCommentFromReview(removeIt.reviewId, id);
-        await users.removeCommentFromUser(removeIt.commenter, id);
-
-
-        const commentInfo = await allComments.removeOne({ _id: parsedId });
-        if (commentInfo.deletedCount == 0)
-            throw 'Comment could not be deleted';
-        return commentInfo;
+        const commentCollection = await comments();
+        const commentInfo = await commentCollection.removeOne({ _id: parsedId });
+        if (commentInfo.deletedCount == 0) throw 'Comment could not be deleted';
+        return this.getCommentById(id);
     }
 }
 module.exports = exportedMethods;

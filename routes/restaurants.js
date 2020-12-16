@@ -312,7 +312,7 @@ router.put('/:id/reviews/:reviewId', async (req, res) => {
     let sReview = 0;
     if (oldReview.content.length <= 4) sReview++;
     if (oldReview.content.length <= 15) sReview++;
-
+    oldReview.sReview = sReview;
     let updatedReview = await reviewData.updateReview(oldReview);
     updatedReview.username = req.session.user.username;
     res.json(updatedReview);
@@ -549,7 +549,7 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
         return;
     }
     try {
-        await restaurantData.getById(req.params.reviewId);
+        await reviewData.getById(req.params.reviewId);
     } catch (e) {
         res.status(404).json({ error: 'Review not found!' });
         return;
@@ -619,6 +619,47 @@ router.put('/:restaurantId/reviews/:reviewId/comments/:commentId', async (req, r
     oldComment.comment = comment.comment;
     try {
         comment = await commentData.updateComment(req.params.commentId, comment);
+    } catch (e) {
+        res.status(400).json({ error: 'Failed to add comment!' });
+        return;
+    }
+    res.json(comment);
+});
+
+router.delete('/:restaurantId/reviews/:reviewId/comments/:commentId', async (req, res) => {
+    if (!req.params.restaurantId) {
+        res.status(400).json({ error: 'restaurantId needed to edit comments!' });
+        return;
+    }
+    if (!req.params.reviewId) {
+        res.status(400).json({ error: 'reviewId needed to edit comments!' });
+        return;
+    }
+    if (!req.params.commentId) {
+        res.status(400).json({ error: 'commentId needed to edit comments!' });
+        return;
+    }
+    try {
+        await restaurantData.getById(req.params.restaurantId);
+    } catch (e) {
+        res.status(404).json({ error: 'Restaurant not found!' });
+        return;
+    }
+    try {
+        await reviewData.getById(req.params.reviewId);
+    } catch (e) {
+        res.status(404).json({ error: 'Review not found!' });
+        return;
+    }
+    let comment;
+    try {
+        comment = await commentData.getById(req.params.commentId);
+    } catch (e) {
+        res.status(404).json({ error: 'Comment not found!' });
+        return;
+    }
+    try {
+        comment = await commentData.removeComment(req.params.commentId, comment);
     } catch (e) {
         res.status(400).json({ error: 'Failed to add comment!' });
         return;

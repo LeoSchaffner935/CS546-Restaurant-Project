@@ -106,7 +106,7 @@ async function main() {
         reviews: [],
         featuredItems: [{ "Cheeseburger": "$0.99" }],
         menu: "http://www.facebook.com",
-        serviceModes: ["Takeout"],
+        serviceModes: ["Takeaway"],
         location: {
             address: "2 Castle Point Terrace",
             latitude: 52.1,
@@ -121,7 +121,7 @@ async function main() {
     let restaurant4 = {
         name: "Five Star Diner",
         owner: "starman@example.com",
-        categories: ["Diner"],
+        categories: ["Family Style"],
         rating: 4,
         reviews: [],
         featuredItems: [{ "Steak": "$10.99" }, {"Chicken Pot Pie": "$9.99"}],
@@ -141,12 +141,12 @@ async function main() {
     let restaurant5 = {
         name: "Baba Booey's Big BBQ",
         owner: "booman@example.com",
-        categories: ["BBQ"],
+        categories: ["Premium Casual"],
         rating: 3,
         reviews: [],
         featuredItems: [{ "Ribs": "$9.99" }],
         menu: "http://www.twitter.com",
-        serviceModes: ["Dine-in", "Takeout"],
+        serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "512 Washington Street",
             latitude: 53.01,
@@ -166,7 +166,7 @@ async function main() {
         reviews: [],
         featuredItems: [{ "Slider": "$0.99" }, { "Cheese Slider": "$1.99"}],
         menu: "http://www.google.com",
-        serviceModes: ["Delivery", "Takeout"],
+        serviceModes: ["Delivery", "Takeaway"],
         location: {
             address: "705 Jefferson Street",
             latitude: 55.35,
@@ -186,7 +186,7 @@ async function main() {
         reviews: [],
         featuredItems: [{ "Burger": "$0.99" }],
         menu: "http://www.twitter.com",
-        serviceModes: ["Dine-in", "Takeout"],
+        serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "402 Newark Street",
             latitude: 56.01,
@@ -201,12 +201,12 @@ async function main() {
     let restaurant8 = {
         name: "CS 546 The Resturant",
         owner: "hill@example.com",
-        categories: ["Cafe"],
+        categories: ["Fine Dining"],
         rating: 4,
         reviews: [],
         featuredItems: [{ "Lab 2 Burger": "$8.99" }],
         menu: "http://www.stevens.edu",
-        serviceModes: ["Dine-in", "Takeout"],
+        serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "404 Newark Street",
             latitude: 52.31,
@@ -233,8 +233,6 @@ async function main() {
     const review13 = await reviews.addReview("Great", restaurant7._id.toString(), user1._id.toString(), 5, "08/13/2020", "Great food, much better than the other one.", ["delicious"]);
     const review14 = await reviews.addReview("Alright", restaurant7._id.toString(), user4._id.toString(), 3, "08/30/2020", "Not bad, burger was good. Think one of the employees growled at me.", []);
     const review15 = await reviews.addReview("Good", restaurant8._id.toString(), user2._id.toString(), 4, "09/30/2020", "Tried to order a coffee and learned MongoDB instead. Nice atmosphere though.", []);
-
-
 
     //const comment1 = await comments.addComment(user2._id.toString(), review1._id.toString(), "I agree with this review", "08/09/2020");
     //const comment2 = await comments.addComment(user1._id.toString(), review2._id.toString(), "I don't agree with this review", "08/22/2020");

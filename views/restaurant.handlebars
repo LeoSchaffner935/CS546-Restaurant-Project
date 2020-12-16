@@ -77,6 +77,14 @@
         {{#each tags}}
             <li>{{this}}</li>
         {{/each}}
+        {{#if authenticated}}
+            <form id='commentForm' action='restaurants/{{../_id}}/reviews/{{_id}}/comments' method='POST'>
+                <label>Post a Comment
+                    <input id='comment' name='comment' type='text' placeholder="comment">
+                </label>
+                <button type="submit">Post</button>
+            </form>
+        {{/if}}
         <dl>Comments</dl>
         {{#each comments}}
             <dt>{{this}}</dt>

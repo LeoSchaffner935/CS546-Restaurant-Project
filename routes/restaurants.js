@@ -27,7 +27,7 @@ router.get('/:id', async (req, res) => {
     try {
         restaurant = await restaurantData.getRestaurantById(id);
         const allReviews = await reviewData.getAllReviews();
-        restaurant.reviews = allReviews.filter(review => review.restaurantReviewed === restaurant._id);
+        restaurant.reviews = allReviews.filter(review => review.restaurantId === restaurant._id);
         for (review of restaurant.reviews) {
             review.user = await userData.getById(review.userId);
         }
@@ -213,7 +213,6 @@ router.post('/:id/reviews', async (req, res) => {
         res.status(400).json({ error: 'Rating must be from 1-5' });
         return;
     }
-    const dateOfReview = new Date();
     if (!review.title || typeof review.title !== "string" || !review.title.trim()) {
         res.status(400).json({ error: 'Title is empty' });
         return;
@@ -239,7 +238,11 @@ router.post('/:id/reviews', async (req, res) => {
     if (review.content.length <= 4) sReview++;
     if (review.content.length <= 15) sReview++;
 
-    let newReview = await reviewData.addReview(review.title, restaurantId, review.userId, review.rating, dateOfReview, review.content, review.tags, sReview);
+    review.restaurantId = restaurantId;
+    review.dateOfReview = new Date();
+    review.sReview = sReview;
+
+    let newReview = await reviewData.addReview(review);
     newReview.username = req.session.user.username;
     res.json(newReview);
 });
@@ -547,14 +550,15 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
         res.status(400).json({ error: 'reviewId needed to add comments!' });
         return;
     }
+    console.log(req.params.restaurantId);
     try {
-        await restaurantData.getById(req.params.restaurantId);
+        await restaurantData.getRestaurantById(req.params.restaurantId);
     } catch (e) {
         res.status(404).json({ error: 'Restaurant not found!' });
         return;
     }
     try {
-        await restaurantData.getById(req.params.reviewId);
+        await reviewData.getReviewById(req.params.reviewId);
     } catch (e) {
         res.status(404).json({ error: 'Review not found!' });
         return;
@@ -574,6 +578,7 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
     try {
         comment = await commentData.addComment(comment);
     } catch (e) {
+        console.log(e);
         res.status(400).json({ error: 'Failed to add comment!' });
         return;
     }

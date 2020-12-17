@@ -44,7 +44,7 @@
 
 {{#if authenticated}}
     <p>Post a Review</p>
-    <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
+    <form id="reviewForm">
         <label>Title
             <input id="title" name="title" type="text" placeholder="Title">
         </label>
@@ -66,9 +66,8 @@
 <h2>Reviews</h2>
 <div id="reviewList">
 {{#each restaurant.reviews}}
-    <div id="review">
+    <div class="review">
         <a href="/users/{{user.username}}">{{user.username}}</a>
-        <!-- Create if_eq handlebars helper -->
         <h3>{{title}}</h3>
         <p>{{dateOfReview}}</p>
         <p>Rating: {{rating}}</p>
@@ -77,10 +76,10 @@
         {{#each tags}}
             <li>{{this}}</li>
         {{/each}}
-        {{#if authenticated}}
-            <form id='commentForm' action='restaurants/{{../_id}}/reviews/{{_id}}/comments' method='POST'>
+        {{#if ../authenticated}}
+            <form id='commentForm'>
                 <label>Post a Comment
-                    <input id='comment' name='comment' type='text' placeholder="comment">
+                    <input id='comment' name='comment' type='text' placeholder="Comment">
                 </label>
                 <input id='reviewId' name='reviewId' value='{{_id}}' hidden>
                 <button type="submit">Post</button>
@@ -89,10 +88,10 @@
         <h3>Comments</h3>
         <div id='commentList'>
             {{#each comments}}
-               <div id='comment'>
-               <a href=''>{{user}}</a>
+               <div class='comment'>
+               <a href='/users/{{userId}}'>{{userId}}</a>
                <p>{{date}}</p>
-               <p>{{content}}</p>
+               <p>{{comment}}</p>
                </div>
             {{/each}}
         </div>

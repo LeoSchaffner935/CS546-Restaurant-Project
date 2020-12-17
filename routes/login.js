@@ -16,14 +16,23 @@ router.post("/", async (req, res) => {
     let loginInfo = req.body;
     if (!loginInfo.username || typeof loginInfo.username !== "string" || !loginInfo.username.trim()) {
         res.status(400).render("login", { error: true });
+        return;
     }
     loginInfo.username = loginInfo.username.trim().toLowerCase();
     if (!loginInfo.password || typeof loginInfo.password !== "string" || !loginInfo.password.trim()) {
         res.status(400).render("login", { error: true });
+        return;
     }
-    const user = await userData.getByUsername(loginInfo.username);
+    let user;
+    try {
+        user = await userData.getByUsername(loginInfo.username);
+    } catch (e) {
+        res.status(404).render("login", { error: true });
+        return;
+    }
     if (!await bcrypt.compare(req.body.password, user.hashedPassword)) {
         res.status(401).render("login", { error: true });
+        return;
     }
     req.session.user = {
         _id: user._id,

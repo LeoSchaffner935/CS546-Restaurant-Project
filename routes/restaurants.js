@@ -40,15 +40,40 @@ router.get('/:id', async (req, res) => {
     restaurant.featuredItems.forEach(x => {
         for (y in x) featuredItems.push(y + ': ' + Object.getOwnPropertyDescriptor(x, y).value);
     });
-    
-
-    let authenticated = req.session.user ? true : false;
+    restaurant.featuredItems = featuredItems;
+    restaurant.authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
-        authenticated: authenticated,
-        session: req.session.user,
-        featuredItems: featuredItems
+        session: req.session.user
     });
+});
+
+router.get('/:id/json', async (req, res) => {
+    if (!req.params.id) {
+        res.status(400).json({ error: 'You must Supply an ID to get' });
+        return;
+    }
+    let id = req.params.id;
+    let restaurant;
+    try {
+        restaurant = await restaurantData.getRestaurantById(id);
+        const allReviews = await reviewData.getAllReviews();
+        restaurant.reviews = allReviews.filter(review => review.restaurantId === restaurant._id);
+        for (review of restaurant.reviews) {
+            review.user = await userData.getById(review.userId);
+        }
+    } catch (e) {
+        res.status(404).json({ error: 'restaurant not found!' });
+    }
+
+    // Parse featuredItems
+    let featuredItems = [];
+    restaurant.featuredItems.forEach(x => {
+        for (y in x) featuredItems.push(y + ': ' + Object.getOwnPropertyDescriptor(x, y).value);
+    });
+    restaurant.featuredItems = featuredItems;
+    restaurant.authenticated = req.session.user ? true : false;
+    res.json(restaurant);
 });
 
 router.get('/:id/map', async (req, res) => {
@@ -585,6 +610,7 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
         res.status(400).json({ error: 'Failed to add comment!' });
         return;
     }
+    comment.username = req.session.user.username;
     res.json(comment);
 });
 
@@ -636,6 +662,7 @@ router.put('/:restaurantId/reviews/:reviewId/comments/:commentId', async (req, r
         res.status(400).json({ error: 'Failed to add comment!' });
         return;
     }
+    comment.username = req.session.user.username;
     res.json(comment);
 });
 

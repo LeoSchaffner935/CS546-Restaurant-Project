@@ -15,11 +15,11 @@ async function getById(id) {
 
 async function getAll() {
   const userCollection = await users();
-  let users = await userCollection.find({}).toArray();
-  for (user of users) {
+  let usersList = await userCollection.find({}).toArray();
+  for (user of usersList) {
     user._id = user._id.toString();
   }
-  return users;
+  return usersList;
 }
 
 async function getByUsername(username) {

@@ -44,19 +44,19 @@
 
     <dt class="restElem">Featured Items</dt>
     <dd><ul>
-        {{#each featuredItems}}
+        {{#each restaurant.featuredItems}}
         <li>{{this}}</li>
         {{/each}}
     </ul></dd>
 </dl>
 
-{{#unless authenticated}}
+{{#unless restaurant.authenticated}}
     <p>You must be logged in to post a review</p>
 {{/unless}}
 
-{{#if authenticated}}
+{{#if restaurant.authenticated}}
     <p>Post a Review</p>
-    <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
+    <form id="reviewForm" action="/restaurants/{{restaurant._id}}/reviews" method="POST">
         <label>Title
             <input id="title" class="reviewForm" name="title" type="text" placeholder="Title">
         </label>
@@ -77,7 +77,7 @@
 
 <h2>Reviews</h2>
 <div id="reviewList">
-{{#each restaurant.reviews}}
+{{!-- {{#each restaurant.reviews}}
     <div id="review">
         <a href="/users/{{user.username}}">{{user.username}}</a>
         <!-- Create if_eq handlebars helper -->
@@ -95,7 +95,7 @@
             <dd>{{this}}</dd>
         {{/each}}
     </div>
-{{/each}}
+{{/each}} --}}
 </div>
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="

@@ -10,8 +10,14 @@
                 <h3>Quick Bites</h3>
                 <a href="/">Home</a>
                 <a href="/restaurants">Restaurants</a>
+                {{#if authenticated}}
+                <a href='/private'>My Account</a>
+                <a href='/logout'>Logout</a>
+                {{/if}}
+                {{#unless authenticated}}
                 <a href="/login">Login</a>
                 <a href="/signup">Signup</a>
+                {{/unless}}
 
                 <form id="searchForm" action="/search" method="POST">
                     <label>Search

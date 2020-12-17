@@ -130,3 +130,12 @@ li.userlist{
     font-weight: bold;
     font-size: 18px;
 }
+
+.signupTable{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.signupForm{
+    text-align: center;
+}

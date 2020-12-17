@@ -1,30 +1,56 @@
 <div id="signup">
     <h1>Signup</h1>
-    <form id="signupForm" method="POST" action="/users">
-        <label>Username
-            <input id="username" name="username" type="text" placeholder="Username">
-        </label>
+    <form id="signupForm" class="signupForm" method="POST" action="/users">
+        <table class="signupTable">
+            <tr>
+                <td>
+                    <label for="username">Username:</label>
+                </td>
+                <td>
+                    <input id="username" name="username" type="text" placeholder="Username">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="firstName">First Name:</label>
+                </td>
+                <td>
+                    <input id="firstName" name="firstName" type="text" placeholder="First Name">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="lastName">Last Name:</label>
+                </td>
+                <td>
+                    <input id="lastName" name="lastName" type="text" placeholder="Last Name">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="email">Email:</label>
+                </td>
+                <td>
+                    <input id="email" name="email" type="text" placeholder="Email">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="password">Password:</label>
+                </td>
+                <td>
+                    <input id="password" name="password" type="text" placeholder="Password">
 
-        <label>First Name
-            <input id="firstName" name="firstName" type="text" placeholder="First Name">
-        </label>
-
-        <label>Last Name
-            <input id="lastName" name="lastName" type="text" placeholder="Last Name">
-        </label>
-
-        <label>Email
-            <input id="email" name="email" type="text" placeholder="Email">
-        </label>
-
-        <label>Password
-            <input id="password" name="password" type="text" placeholder="Password">
-        </label>
-
-        <label>Bio
-            <input id="bio" name="bio" type="text" placeholder="Bio">
-        </label>
-        
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="bio">Bio:</label>
+                </td>
+                <td>
+                    <input id="bio" name="bio" type="text" placeholder="Bio">
+        </table>
+        <br>
         <button type="submit">Create Account</button>
     </form>
 </div>

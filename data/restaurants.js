@@ -24,6 +24,22 @@ async function addRestaurant(restaurant) {
     const insertInfo = await restaurantsCollection.insertOne(restaurant);
     if (insertInfo.insertedCount === 0) throw 'Insertion failed!';
     // TODO calculate nearByRestaurants after saving to DB in one of the layers
+    const restaurantList = await this.getAllRestaurants();
+    if (restaurantList && restaurantList.length > 0) {
+        for (let rest of restaurantList) {
+            if (rest._id.toString() != insertInfo.insertedId.toString() && 
+            calculateDistance(restaurant.location.latitude, restaurant.location.longitude, rest.location.latitude, rest.location.longitude) <= 10) {
+                if (!restaurant.nearByRestaurants) restaurant.nearByRestaurants = [];
+                if (!rest.nearByRestaurants) rest.nearByRestaurants = [];
+        
+                restaurant.nearByRestaurants.push(rest._id.toString());
+                rest.nearByRestaurants.push(insertInfo.insertedId.toString());
+                await this.updateRestaurant(insertInfo.insertedId.toString(), restaurant);
+                await this.updateRestaurant(rest._id.toString(), rest);
+            }
+        }
+    }
+    
     return await this.getRestaurantById(insertInfo.insertedId.toString());
 }
 
@@ -100,6 +116,17 @@ async function removeReviewFromRestaurant(restaurantId, reviewId) {
     const restaurantsCollection = await restaurants();
     const updateInfo = restaurantsCollection.updateOne({ _id: parsedId }, { $pull: { reviews: reviewId } });
     if (!updateInfo.matchedCount) throw 'Restaurant with restaurantId not found!';
+}
+
+function calculateDistance(lat1, lng1, lat2, lng2) {
+    var R = 3958.8;
+    var rlat1 = lat1 * (Math.PI/180);
+    var rlat2 = lat2 * (Math.PI/180);
+    var difflat = rlat2-rlat1;
+    var difflon = (lng2-lng1) * (Math.PI/180);
+
+    var d = 2 * R * Math.asin(Math.sqrt(Math.sin(difflat/2)*Math.sin(difflat/2)+Math.cos(rlat1)*Math.cos(rlat2)*Math.sin(difflon/2)*Math.sin(difflon/2)));
+    return d;
 }
 
 module.exports = { getAllRestaurants, getRestaurantById, addRestaurant, updateRestaurant, removeRestaurant, addReviewToRestaurant, removeReviewFromRestaurant }

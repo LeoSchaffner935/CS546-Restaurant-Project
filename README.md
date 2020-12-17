@@ -26,4 +26,10 @@ Posting a Review:
     
 Posting a Comment:
     There will be a link on a review that will open up a form, allowing you to post a comment for that review.
-    Simply fill out all the fields, submit, and you will then see your review on the page.
+    Simply fill out all the fields, submit, and you will then see your comment on the page.
+
+Requesting a Restaurant:
+    You may request a restaurant by clicking Request Restaurant. Fill out the form and you will notice that your request has been added to the corresposning database.
+    
+My Account:
+    When logged in, you may click My Account, which will bring you to your personal user page. Here you may edit your information.

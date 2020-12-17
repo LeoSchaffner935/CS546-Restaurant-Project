@@ -35,11 +35,19 @@ router.get('/:id', async (req, res) => {
         res.status(404).json({ error: 'restaurant not found!' });
     }
 
+    // Parse featuredItems
+    let featuredItems = [];
+    restaurant.featuredItems.forEach(x => {
+        for (y in x) featuredItems.push(y + ': ' + Object.getOwnPropertyDescriptor(x, y).value);
+    });
+    
+
     let authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
         authenticated: authenticated,
-        session: req.session.user
+        session: req.session.user,
+        featuredItems: featuredItems
     });
 });
 

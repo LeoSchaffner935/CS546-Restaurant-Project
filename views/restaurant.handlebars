@@ -32,10 +32,22 @@
     <dd><a href="{{restaurant.menu}}">{{restaurant.menu}}</a></dd>
 
     <dt>Hours</dt>
-    <dd>To be Implemented</dd>
+    <dd><ul>
+       <li>Sunday: {{restaurant.hours.Sunday}}</li>
+       <li>Monday: {{restaurant.hours.Monday}}</li> 
+       <li>Tuesday: {{restaurant.hours.Tuesday}}</li> 
+       <li>Wednesday: {{restaurant.hours.Wednesday}}</li> 
+       <li>Thursday: {{restaurant.hours.Thursday}}</li> 
+       <li>Friday: {{restaurant.hours.Friday}}</li> 
+       <li>Saturday: {{restaurant.hours.Saturday}}</li>  
+    </ul></dd>
 
     <dt>Featured Items</dt>
-    <dd>To be implemented</dd>
+    <dd><ul>
+        {{#each featuredItems}}
+        <li>{{this}}</li>
+        {{/each}}
+    </ul></dd>
 </dl>
 
 {{#unless authenticated}}

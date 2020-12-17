@@ -31,8 +31,7 @@
     <dt class="restElem">Menu</dt>
     <dd><a href="{{restaurant.menu}}">{{restaurant.menu}}</a></dd>
 
-<<<<<<< HEAD
-    <dt>Hours</dt>
+    <dt class="restElem">Hours</dt>
     <dd><ul>
        <li>Sunday: {{restaurant.hours.Sunday}}</li>
        <li>Monday: {{restaurant.hours.Monday}}</li> 
@@ -43,19 +42,12 @@
        <li>Saturday: {{restaurant.hours.Saturday}}</li>  
     </ul></dd>
 
-    <dt>Featured Items</dt>
+    <dt class="restElem">Featured Items</dt>
     <dd><ul>
         {{#each featuredItems}}
         <li>{{this}}</li>
         {{/each}}
     </ul></dd>
-=======
-    <dt class="restElem">Hours</dt>
-    <dd>To be Implemented</dd>
-
-    <dt class="restElem">Featured Items</dt>
-    <dd>To be implemented</dd>
->>>>>>> 249be219e4cf5780556e3a8b56e441c962e96b94
 </dl>
 
 {{#unless authenticated}}

@@ -54,10 +54,10 @@ const exportedMethods = {
         if (insertInfo.insertedCount === 0) throw 'Insertion failed!';
         const newId = insertInfo.insertedId.toString();
 
-        await reviews.addCommentToReview(reviewId, newId);
-        await users.addCommentToUser(commenter, newId);
-        comment._id = newId;
-        return comment;
+        await reviews.addCommentToReview(comment.reviewId, newId);
+        await users.addCommentToUser(comment.userId, newId);
+        
+        return this.getCommentById(newId);
     },
     async updateComment(id, comment) {
         if (!id || typeof id !== "string" || !id.trim()) {

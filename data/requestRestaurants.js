@@ -23,7 +23,6 @@ async function addRestaurant(restaurant) {
     if (!restaurant.name || typeof restaurant.name !== "string" || !restaurant.name.trim()) throw 'Invalid restaurant name';
     if (!restaurant.location || typeof restaurant.location !== "string" || !restaurant.location.trim()) throw 'Invalid restaurant location';
     if (!restaurant.contact || typeof restaurant.contact !== "string" || !restaurant.contact.trim()) throw 'Invalid restaurant contact';
-    if (!restaurant.reason || typeof restaurant.reason !== "string" || !restaurant.reason.trim()) throw 'Invalid restaurant reason';
 
     const rRestaurantsCollection = await requestRestaurants();
     const insertInfo = await rRestaurantsCollection.insertOne(restaurant);

@@ -3,9 +3,7 @@ const router = express.Router();
 const data = require('../data');
 const requestRestaurants = data.requestRestaurants;
 
-router.post('/', async (req, res) => {
-    const allowedCategories = ['Fast Food', 'Ethnic', 'Fast Casual', 'Casual Dining', 'Premium Casual', 'Family Style', 'Fine Dining'];
-    
+router.post('/', async (req, res) => {    
     const restaurantInfo = req.body;
 
     if (!restaurantInfo) {
@@ -17,19 +15,15 @@ router.post('/', async (req, res) => {
         return;
     }
 
-    // if (!restaurantInfo.categories || !Array.isArray(restaurantInfo.categories)) {
-    //     res.status(400).json({ error: 'categories must be properly defined' });
-    //     return;
-    // }
-    // let tempCategories = [];
-    // for (const category of restaurantInfo.categories) {
-    //     if (!allowedCategories.includes(category)) {
-    //         res.status(400).json({ error: 'unknown category passed in input' });
-    //         return;
-    //     }
-    //     if (!tempCategories.includes(category)) tempCategories.push(category);
-    // }
-    // restaurantInfo.categories = tempCategories;
+    let tempCategories = [];
+    if (restaurantInfo.fastfood) tempCategories.push(restaurantInfo.fastfood);
+    if (restaurantInfo.ethinic) tempCategories.push(restaurantInfo.ethinic);
+    if (restaurantInfo.fastcasual) tempCategories.push(restaurantInfo.fastcasual);
+    if (restaurantInfo.casualdining) tempCategories.push(restaurantInfo.casualdining);
+    if (restaurantInfo.premiumcasual) tempCategories.push(restaurantInfo.premiumcasual);
+    if (restaurantInfo.familystyle) tempCategories.push(restaurantInfo.familystyle);
+    if (restaurantInfo.finedining) tempCategories.push(restaurantInfo.finedining);
+    restaurantInfo.categories = tempCategories;
     
     if (!restaurantInfo.location || typeof restaurantInfo.location !== "string" || !restaurantInfo.location.trim()) {
         res.status(400).json({ error: 'location must be provided to create a restaurant' });

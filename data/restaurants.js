@@ -28,7 +28,10 @@ async function addRestaurant(restaurant) {
     if (restaurantList && restaurantList.length > 0) {
         for (let rest of restaurantList) {
             if (rest._id.toString() != insertInfo.insertedId.toString() && 
-            calculateDistance(restaurant.location.latitude, restaurant.location.longitude, rest.location.latitude, rest.location.longitude) <= 100) {
+            calculateDistance(restaurant.location.latitude, restaurant.location.longitude, rest.location.latitude, rest.location.longitude) <= 10) {
+                if (!restaurant.nearByRestaurants) restaurant.nearByRestaurants = [];
+                if (!rest.nearByRestaurants) rest.nearByRestaurants = [];
+        
                 restaurant.nearByRestaurants.push(rest._id.toString());
                 rest.nearByRestaurants.push(insertInfo.insertedId.toString());
                 await this.updateRestaurant(insertInfo.insertedId.toString(), restaurant);

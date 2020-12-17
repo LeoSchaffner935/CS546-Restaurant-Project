@@ -2,12 +2,14 @@ const userRoutes = require('./users');
 const restaurantRoutes = require('./restaurants');
 const searchRoutes = require('./search');
 const loginRoutes = require('./login');
+const requestRRoutes = require('./requestR');
 
 const constructorMethod = (app) => {
   app.use('/users', userRoutes);
   app.use('/restaurants', restaurantRoutes);
   app.use('/search', searchRoutes);
   app.use('/login', loginRoutes);
+  app.use('/requestR', requestRRoutes);
 
   app.get('/', (req, res) => {
     res.render('home');
@@ -16,6 +18,10 @@ const constructorMethod = (app) => {
   app.get('/signup', (req, res) => {
     res.render('signup');
   });
+
+  app.get('/requestR', (req, res) => {
+    res.render('requestRestaurant');
+  })
 
   app.get("/private",(req,res) => {
     try {

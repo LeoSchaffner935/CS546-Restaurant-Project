@@ -1,0 +1,40 @@
+<div id="requestR">
+    <h1>Request Restaurant</h1>
+    <form id="requestForm" method="POST" action="/requestR">
+        <label>Restaurant Name
+            <input id="restaurantName" name="restaurantName" type="text" placeholder="Restaurant Name">
+        </label>
+
+        <label>Owner (optional)
+            <input id="owner" name="owner" type="text" placeholder="Owner">
+        </label>
+
+        {{!-- <label>Categories
+            <select multiple>
+                {{#select colors}}
+                <option value = "fastfood">Fast Food</option>
+                <option value = "ethinic">Ethnic</option>
+                <option value = "fastcasual">Fast Casual</option>
+                <option value = "casualdining">Casual Dining</option>
+                <option value = "premiumcasual">Premium Casual</option>
+                <option value = "familystyle">Family Style</option>
+                <option value = "finedining">Fine Dining</option>
+                {{/select}}
+            </select>
+        </label> --}}
+
+        <label>Location
+            <input id="location" name="location" type="text" placeholder="Location">
+        </label>
+
+        <label>Contact Information
+            <input id="contact" name="contact" type="text" placeholder="Contact">
+        </label>
+
+        <label>Reason for Recommendation (optional)
+            <input id="reason" name="reason" type="text" placeholder="Reason">
+        </label>
+
+        <button type="submit">Create Request</button>
+    </form>
+</div>

@@ -52,7 +52,16 @@ async function add(user) {
   if (!user.bio || typeof user.bio !== "string" || !user.bio.trim()) throw "Data/Users.js/add: Invalid bio!";
   user.username = user.username.toLowerCase();
   user.email = user.email.toLowerCase();
+  user.profilePicture = "default.jpg";
   const userCollection = await users();
+
+
+  const userName = await userCollection.findOne({ username: user.username });
+  if (userName.username === user.username) throw "Data/Users.js/add: Error, username already taken!";
+  const userMail = await userCollection.findOne({ email: user.email });
+  if (userMail.email === user.email) throw "Data/Users.js/add: Error, email already taken!";
+
+
   const newInsertInformation = await userCollection.insertOne(user);
   if (newInsertInformation.insertedCount === 0) throw 'Data/Users.js/add: Insert failed!';
   return await this.getById(newInsertInformation.insertedId.toString());
@@ -70,6 +79,12 @@ async function update(id, user) {
   user.email = user.email.toLowerCase();
   const parsedId = ObjectId(id);
   const userCollection = await users();
+
+  const userName = await userCollection.findOne({ username: user.username });
+  if (userName.username === user.username) throw "Data/Users.js/update: Error, username already taken!";
+  const userMail = await userCollection.findOne({ email: user.email });
+  if (userMail.email === user.email) throw "Data/Users.js/update: Error, email already taken!";
+
   const updateInfo = await userCollection.updateOne(
     { _id: parsedId },
     { $set: user }

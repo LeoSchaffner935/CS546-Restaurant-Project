@@ -1,6 +1,7 @@
 To run application, type in your console the following in order:
-    1. npm run seed
-    2. npm start
+    1. npm i
+    2. npm run seed
+    3. npm start
     
 Signup:
     The first thing you should do is the click "Signup" in the navigation bar.

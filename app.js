@@ -43,6 +43,7 @@ app.use('/users/:id', (req, res, next) => {
     }
     else next();
   }
+  else next();
 });
 
 configRoutes(app);

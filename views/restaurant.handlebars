@@ -1,4 +1,4 @@
-<h1 id="restaurantName">{{restaurant.name}}</h1>
+<h3 id="restaurantName">{{restaurant.name}}</h3>
 
 <div id="map" style="width: 500px; height: 300px;"></div>
 <input id="lat" value="{{restaurant.location.latitude}}" hidden>
@@ -7,34 +7,34 @@
 <input id="rId" value="{{restaurant._id}}" hidden>
 
 <dl id="restaurantInfo">
-    <dt>Location</dt>
+    <dt class="restElem">Location</dt>
     <dd>{{restaurant.location.address}}</dd>
     
-    <dt>Categories</dt>
+    <dt class="restElem">Categories</dt>
     {{#each restaurant.categories}}
     <dd>{{this}}</dd>
     {{/each}}
 
-    <dt>Rating</dt>
+    <dt class="restElem">Rating</dt>
     <dd>{{restaurant.rating}}</dd>
 
-    <dt>Service Modes</dt>
+    <dt class="restElem">Service Modes</dt>
     {{#each restaurant.serviceModes}}
     <dd>{{this}}</dd>
     {{/each}}
 
-    <dt>Frequent Tags</dt>
+    <dt class="restElem">Frequent Tags</dt>
     {{#each restaurant.frequentTags}}
     <dd>{{this}}</dd>
     {{/each}}
 
-    <dt>Menu</dt>
+    <dt class="restElem">Menu</dt>
     <dd><a href="{{restaurant.menu}}">{{restaurant.menu}}</a></dd>
 
-    <dt>Hours</dt>
+    <dt class="restElem">Hours</dt>
     <dd>To be Implemented</dd>
 
-    <dt>Featured Items</dt>
+    <dt class="restElem">Featured Items</dt>
     <dd>To be implemented</dd>
 </dl>
 
@@ -46,16 +46,16 @@
     <p>Post a Review</p>
     <form id="reviewForm" action="/restaurant/{{restaurant._id}}/reviews" method="POST">
         <label>Title
-            <input id="title" name="title" type="text" placeholder="Title">
+            <input id="title" class="reviewForm" name="title" type="text" placeholder="Title">
         </label>
         <label>Rating
-            <input id="rating" name="rating" type="number" placeholder="Rating">
+            <input id="rating" class="reviewForm" name="rating" type="number" placeholder="Rating">
         </label>
         <label>Review
-            <input id="content" name="content" type="text" placeholder="Type in review">
+            <input id="content" class="reviewForm" name="content" type="text" placeholder="Type in review">
         </label>
         <label>Tags (separated by comma)
-            <input id="tags" name="tags" type="text" placeholder="Tags">
+            <input id="tags" class="reviewForm" name="tags" type="text" placeholder="Tags">
         </label>
         <input id="restaurantId" name="restaurantId" value="{{restaurant._id}}" hidden>
         <button type="submit">Post</button>

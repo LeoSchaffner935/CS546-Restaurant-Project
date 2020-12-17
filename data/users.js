@@ -56,11 +56,6 @@ async function add(user) {
   const userCollection = await users();
 
 
-  const userName = await userCollection.findOne({ username: user.username });
-  if (userName.username === user.username) throw "Data/Users.js/add: Error, username already taken!";
-  const userMail = await userCollection.findOne({ email: user.email });
-  if (userMail.email === user.email) throw "Data/Users.js/add: Error, email already taken!";
-
 
   const newInsertInformation = await userCollection.insertOne(user);
   if (newInsertInformation.insertedCount === 0) throw 'Data/Users.js/add: Insert failed!';

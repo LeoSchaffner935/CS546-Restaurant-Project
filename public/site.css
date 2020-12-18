@@ -2,7 +2,7 @@ body{
     background: goldenrod;
 }
 
-a:active{
+a {
   color: #0000e0;
 }
 
@@ -119,6 +119,10 @@ li.userlist{
 
   #navbar h1 {
     color: #7272cc;
+  }
+
+  #navbar label {
+    color: #9b9b9b;
   }
   
   #navbar a {

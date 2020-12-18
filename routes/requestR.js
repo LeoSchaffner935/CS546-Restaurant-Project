@@ -44,7 +44,9 @@ router.post('/', async (req, res) => {
     };
     try {
         await requestRestaurants.addRestaurant(newRestaurant);
-        res.render('requestFinish');
+        res.render('requestFinish', {
+            authenticated: req.session.user ? true : false
+          });
     } catch (e) {
         res.sendStatus(500).json({ error: 'Insertion failed!' });
     }

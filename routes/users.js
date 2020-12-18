@@ -36,7 +36,8 @@ router.get('/:username', async (req, res) => {
     user.comments = fullComments;
 
     res.render('user', {
-        user: user
+        user: user,
+        authenticated: req.session.user ? true : false
     });
 });
 
@@ -194,8 +195,14 @@ router.put('/:id', async (req, res) => {
         res.status(400).json({ error: 'Invalid email!' });
         return;
     }
-
-
+    if (!user.profilePicture || typeof user.profilePicture !== "string" || !user.profilePicture.trim()) {
+        res.status(400).json({ error: 'Invalid profile picture!' });
+        return;
+    }
+    if ((user.profilePicture !== "default.jpg") && (user.profilePicture !== "happy.jpg") && (user.profilePicture !== "angry.jpg") && (user.profilePicture !== "sad.jpg")) {
+        res.status(400).json({ error: 'Invalid profile picture!' });
+        return;
+    }
     user.hashedPassword = await bcrypt.hash(user.password, 16);
     delete user.password;
     user = await userData.update(req.params.id, user);
@@ -208,7 +215,10 @@ router.put('/:id', async (req, res) => {
         bio: user.bio,
         profilePicture: user.profilePicture
     };
-    res.render("private", req.session.user);
+    res.render("private", {
+        user: req.session.user,
+        authenticated: req.session.user ? true : false
+      });
     return;
 });
 

@@ -10,7 +10,8 @@ router.get('/', async (req, res) => {
     try {
         const allRestaurants = await restaurantData.getAllRestaurants();
         res.render('restaurants', {
-            restaurants: allRestaurants
+            restaurants: allRestaurants,
+            authenticated: req.session.user ? true : false
         });
     } catch (e) {
         res.status(500).json({ error: 'Error occured while fetching restaurant!' });
@@ -44,6 +45,7 @@ router.get('/:id', async (req, res) => {
     restaurant.authenticated = req.session.user ? true : false;
     res.render('restaurant', {
         restaurant: restaurant,
+        authenticated: req.session.user ? true : false,
         session: req.session.user
     });
 });
@@ -212,7 +214,8 @@ router.post('/', async (req, res) => {
     try {
         newRestaurant = await restaurantData.addRestaurant(newRestaurant);
         res.render('restaurant', {
-            restaurant: newRestaurant
+            restaurant: newRestaurant,
+            authenticated: req.session.user ? true : false
         });
     } catch (e) {
         res.sendStatus(500).json({ error: 'Insertion failed!' });

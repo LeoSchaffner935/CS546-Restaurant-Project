@@ -5,7 +5,9 @@ const userData = data.users;
 const bcrypt = require("bcrypt");
 
 router.get("/", (req, res) => {
-    res.render('login');
+    res.render('login', {
+        authenticated: req.session.user ? true : false
+      });
 });
 
 router.post("/", async (req, res) => {

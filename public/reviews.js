@@ -195,5 +195,13 @@
   //     commentList.append(newComment);
   //   });
   // });
+  
+  setTimeout(function(){
+    alert("Session about to expire");
+ },80000);
+
+ setTimeout(function(){
+  location.href = '/login';
+},100000);
 
 })(window.jQuery);  

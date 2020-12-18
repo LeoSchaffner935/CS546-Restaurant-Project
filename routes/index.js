@@ -12,20 +12,29 @@ const constructorMethod = (app) => {
   app.use('/requestR', requestRRoutes);
 
   app.get('/', (req, res) => {
-    res.render('home');
+    res.render('home', {
+      authenticated: req.session.user ? true : false
+    });
   });
   
   app.get('/signup', (req, res) => {
-    res.render('signup');
+    res.render('signup', {
+      authenticated: req.session.user ? true : false
+    });
   });
 
   app.get('/requestR', (req, res) => {
-    res.render('requestRestaurant');
+    res.render('requestRestaurant', {
+      authenticated: req.session.user ? true : false
+    });
   })
 
   app.get("/private",(req,res) => {
     try {
-        res.render("private", req.session.user);
+        res.render("private", {
+          user: req.session.user,
+          authenticated: req.session.user ? true : false
+        });
     } catch(e) {
         res.sendStatus(500);
     }

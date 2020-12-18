@@ -22,7 +22,8 @@ router.post('/', async (req, res) => {
     });
     res.render('search', {
         users: filteredUsers,
-        restaurants: filteredRestaurants
+        restaurants: filteredRestaurants,
+        authenticated: req.session.user ? true : false
     });
 
 });

@@ -2,9 +2,13 @@ body{
     background: goldenrod;
 }
 
+a {
+  color: #0000e0;
+}
+
 button[type=submit] {
     padding: 5px 15px;
-    background: gray;
+    background: rgb(177, 178, 221);
     border: 0 none;
     border-radius: 5px;
 }
@@ -39,14 +43,14 @@ input[type=number] {
 
 h3 {
     font-family: "Times New Roman";
-    color: darkblue;
+    color: rgb(37, 37, 179);
     text-align: center;
     font-size: 36px;
   }
 
   h4 {
     font-family: "Times New Roman";
-    color: darkblue;
+    color: rgb(37, 37, 179);
     font-size: 36px;
   }
 .error {
@@ -56,21 +60,36 @@ h3 {
 
 .credits {
     font-family: "Arial";
-    color: brown;
+    color: #8a0000;
     font-size: 10px;
     text-align: center;
 }
 
+
 h1 {
+  font-family: "Times New Roman";
+  color: rgb(37, 37, 179);
+  text-align: center;
+  font-size: 36px;
+  }
+
+h5 {
     font-family: "Times New Roman";
-    color: darkblue;
+    color: rgb(37, 37, 179);
     text-align: center;
     font-size: 24px;
   }
 
 h2 {
     font-family: "Times New Roman";
-    color: darkblue;
+    color: rgb(37, 37, 179);
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  h6 {
+    font-family: "Times New Roman";
+    color: rgb(37, 37, 179);
     text-align: center;
     font-size: 16px;
   }
@@ -96,6 +115,14 @@ li.userlist{
 #navbar {
     background-color: #333;
     overflow: hidden;
+  }
+
+  #navbar h1 {
+    color: #7272cc;
+  }
+
+  #navbar label {
+    color: #9b9b9b;
   }
   
   #navbar a {

@@ -108,8 +108,8 @@ async function main() {
         serviceModes: ["Takeaway"],
         location: {
             address: "2 Castle Point Terrace",
-            latitude: 52.1,
-            longitude: 45.9
+            latitude: 50.45,
+            longitude: 45.50
         },
         nearByRestaurants: [restaurant1._id.toString()],
         hours: { "Sunday": "9:00 AM - 9:00 PM", "Monday": "5:00 AM - 9:00 PM", "Tuesday": "8:00 AM - 9:00 PM", "Wednesday": "8:00 AM - 6:00 PM", "Thursday": "9:00 AM - 9:00 PM", "Friday": "8:00 AM - 6:00 PM", "Saturday": "10:00 AM - 6:00 PM" },
@@ -148,8 +148,8 @@ async function main() {
         serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "512 Washington Street",
-            latitude: 53.01,
-            longitude: 44.39
+            latitude: 50.40,
+            longitude: 45.39
         },
         nearByRestaurants: [restaurant1._id.toString()],
         hours: { "Sunday": "9:00 AM - 9:00 PM", "Monday": "5:00 AM - 9:00 PM", "Tuesday": "8:00 AM - 9:00 PM", "Wednesday": "8:00 AM - 6:00 PM", "Thursday": "9:00 AM - 9:00 PM", "Friday": "8:00 AM - 6:00 PM", "Saturday": "10:00 AM - 6:00 PM" },
@@ -217,40 +217,49 @@ async function main() {
     }
     restaurant8 = await restaurants.addRestaurant(restaurant8);  
 
-    let review1 = {title:"Good", restaurantId:restaurant1._id.toString(), userId:user1._id.toString(), rating:5, content:"good restaurant", tags:["delicious"]};
+    let review1 = {title:"Good", restaurantId:restaurant1._id.toString(), userId:user1._id.toString(), rating:5, content:"good restaurant", tags:["delicious"], comments: ['comment 1', 'comment 2']};
     review1 = await reviews.addReview(review1);
-    let review4 = {title:"Good", restaurantId: restaurant1._id.toString(), userId:user2._id.toString(), rating:4, content:"this was a great place to eat, service was good.", tags:["delicious"]}
+    let review4 = {title:"Good", restaurantId: restaurant1._id.toString(), userId:user2._id.toString(), rating:4, content:"this was a great place to eat, service was good.", tags:["delicious"], comments: []}
     review4 = await reviews.addReview(review4);
-    let review2 = {title:"Bad", restaurantId: restaurant2._id.toString(), userId: user2._id.toString(), rating: 1, content:"bad restaurant, never coming back ever again. service was miserable.", tags:[]};
+    let review2 = {title:"Bad", restaurantId: restaurant2._id.toString(), userId: user2._id.toString(), rating: 1, content:"bad restaurant, never coming back ever again. service was miserable.", tags:[], comments: []};
     review2 = await reviews.addReview(review2);
-    let review5 = {title:"Bad", restaurantId:restaurant2._id.toString(), userId:user3._id.toString(), rating:2, content:"Not that good. Food was overcooked and tasted weird.", tags:[]};
+    let review5 = {title:"Bad", restaurantId:restaurant2._id.toString(), userId:user3._id.toString(), rating:2, content:"Not that good. Food was overcooked and tasted weird.", tags:[], comments: []};
     review5 = await reviews.addReview(review5);
-    let review3 = {title:"Alright", restaurantId:restaurant3._id.toString(), userId:user1._id.toString(), rating:3, content:"It could've been better!", tags:["healthy"]};
+    let review3 = {title:"Alright", restaurantId:restaurant3._id.toString(), userId:user1._id.toString(), rating:3, content:"It could've been better!", tags:["healthy"], comments: []};
     review3 = await reviews.addReview(review3);
-    let review6 = {title:"Great", restaurantId:restaurant3._id.toString(), userId:user4._id.toString(), rating:5, content:"Best meal of my life, I'm gonna come back.", tags:["expensive"]};
+    let review6 = {title:"Great", restaurantId:restaurant3._id.toString(), userId:user4._id.toString(), rating:5, content:"Best meal of my life, I'm gonna come back.", tags:["expensive"], comments: []};
     review6 = await reviews.addReview(review6);
-    let review7 = {title:"Bad", restaurantId:restaurant4._id.toString(), userId:user3._id.toString(), rating:2, content: "Food was cold when I got it, and hard as a rock.", tags:["healthy"]};
+    let review7 = {title:"Bad", restaurantId:restaurant4._id.toString(), userId:user3._id.toString(), rating:2, content: "Food was cold when I got it, and hard as a rock.", tags:["healthy"], comments: []};
     review7 = await reviews.addReview(review7);
-    let review8 = {title:"Alright", restaurantId:restaurant4._id.toString(), userId:user2._id.toString(), rating:3, content:"Very mediocre, more like three star imo", tags:[]};
+    let review8 = {title:"Alright", restaurantId:restaurant4._id.toString(), userId:user2._id.toString(), rating:3, content:"Very mediocre, more like three star imo", tags:[], comments: []};
     review8 = await reviews.addReview(review8);
-    let review9 = {title:"Good", restaurantId:restaurant5._id.toString(), userId:user4._id.toString(), rating:4, content:"The sauce is the boss here. Great food, friendly service", tags:["delicious"]};
+    let review9 = {title:"Good", restaurantId:restaurant5._id.toString(), userId:user4._id.toString(), rating:4, content:"The sauce is the boss here. Great food, friendly service", tags:["delicious"], comments: []};
     review9 = await reviews.addReview(review9);
-    let review10 = {title:"Great", restaurantId:restaurant5._id.toString(), userId:user2._id.toString(), rating:5, content:"Baba Booey never steers me wrong. Love this place.", tags:[]};
+    let review10 = {title:"Great", restaurantId:restaurant5._id.toString(), userId:user2._id.toString(), rating:5, content:"Baba Booey never steers me wrong. Love this place.", tags:[], comments: []};
     review10 = await reviews.addReview(review10);
-    let review11 = {title:"Bad", restaurantId:restaurant6._id.toString(), userId:user2._id.toString(), rating:1, content:"Complete scams. Not worth the money.", tags:[]};
+    let review11 = {title:"Bad", restaurantId:restaurant6._id.toString(), userId:user2._id.toString(), rating:1, content:"Complete scams. Not worth the money.", tags:[], comments: []};
     review11 = await reviews.addReview(review11);
-    let review12 = {title:"Great", restaurantId:restaurant6._id.toString(), userId:user3._id.toString(), rating:4, content:"I worship this place. Eat here once a week at least.", tags:["delicious"]};
+    let review12 = {title:"Great", restaurantId:restaurant6._id.toString(), userId:user3._id.toString(), rating:4, content:"I worship this place. Eat here once a week at least.", tags:["delicious"], comments: []};
     review12 = await reviews.addReview(review12);
-    let review13 = {title:"Great", restaurantId:restaurant7._id.toString(), userId:user1._id.toString(), rating:5, content:"Great food, much better than the other one.", tags:["delicious"]};
+    let review13 = {title:"Great", restaurantId:restaurant7._id.toString(), userId:user1._id.toString(), rating:5, content:"Great food, much better than the other one.", tags:["delicious"], comments: []};
     review13 = await reviews.addReview(review13);
-    let review14 = {title:"Alright", restaurantId:restaurant7._id.toString(), userId:user4._id.toString(), rating:3, content:"Not bad, burger was good. Think one of the employees growled at me.", tags:[]};
+    let review14 = {title:"Alright", restaurantId:restaurant7._id.toString(), userId:user4._id.toString(), rating:3, content:"Not bad, burger was good. Think one of the employees growled at me.", tags:[], comments: []};
     review14 = await reviews.addReview(review14);
-    let review15 = {title:"Good", restaurantId:restaurant8._id.toString(), userId:user2._id.toString(), rating:4, content:"Tried to order a coffee and learned MongoDB instead. Nice atmosphere though.", tags:[]};
+    let review15 = {title:"Good", restaurantId:restaurant8._id.toString(), userId:user2._id.toString(), rating:4, content:"Tried to order a coffee and learned MongoDB instead. Nice atmosphere though.", tags:[], comments: []};
     review15 = await reviews.addReview(review15);
 
 
-    //const comment1 = await comments.addComment(user2._id.toString(), review1._id.toString(), "I agree with this review", "08/09/2020");
-    //const comment2 = await comments.addComment(user1._id.toString(), review2._id.toString(), "I don't agree with this review", "08/22/2020");
+    // const comment1 = await comments.addComment(user1._id.toString(), review1._id.toString(), "I agree with this review", "08/09/2020");
+    // const comment2 = await comments.addComment(user2._id.toString(), review2._id.toString(), "I don't agree with this review", "08/22/2020");
+
+    // review1.comments = [comment1._id];
+    // await reviews.updateReview(review1._id.toString(), review1);
+    // user1.comments = [comment1._id];
+    // await users.addCommentToUser(user1._id, comment1._id);
+
+    // review2.comments = [comment2._id];
+    // await reviews.updateReview(review2._id.toString(), review2);
+    // await users.addCommentToUser(user2._id, comment2._id);
 
     await db.serverConfig.close();
 }

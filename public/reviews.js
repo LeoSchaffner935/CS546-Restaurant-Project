@@ -197,7 +197,7 @@
   // });
   
   setTimeout(function(){
-    alert("Session about to expired");
+    alert("Session about to expire");
  },80000);
 
  setTimeout(function(){

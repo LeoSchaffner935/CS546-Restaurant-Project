@@ -25,7 +25,7 @@
       let a = $('<a></a>').text(rev.user.username);
       a.attr('href', "/users/" + rev.user.username)
       newReview.append(a);
-      newReview.append($('<h3></h3>').text(rev.title));
+      newReview.append($('<h4></h4>').text(rev.title));
       newReview.append($('<p></p>').text(rev.dateOfReview));
       newReview.append($('<p></p>').text("Rating: " + rev.rating));
       newReview.append($('<p></p>').text("Tags: " + rev.tags));
@@ -124,7 +124,7 @@
         let a = $('<a></a>').text(addedReview.username);
         a.attr('href', "/users/" + addedReview.username)
         newReview.append(a);
-        newReview.append($('<h3></h3>').text(addedReview.title));
+        newReview.append($('<h4></h4>').text(addedReview.title));
         newReview.append($('<p></p>').text(addedReview.dateOfReview));
         newReview.append($('<p></p>').text("Rating: " + addedReview.rating));
         newReview.append($('<p></p>').text("Tags: " + addedReview.tags));

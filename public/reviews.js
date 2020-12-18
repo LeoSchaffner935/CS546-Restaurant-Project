@@ -125,7 +125,7 @@
         a.attr('href', "/users/" + addedReview.username)
         newReview.append(a);
         newReview.append($('<h4></h4>').text(addedReview.title));
-        newReview.append($('<p></p>').text(addedReview.dateOfReview));
+        newReview.append($('<p></p>').text(new Date()));
         newReview.append($('<p></p>').text("Rating: " + addedReview.rating));
         newReview.append($('<p></p>').text("Tags: " + addedReview.tags));
         newReview.append($('<p></p>').text(addedReview.content));

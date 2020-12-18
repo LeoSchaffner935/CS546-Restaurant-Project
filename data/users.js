@@ -75,11 +75,6 @@ async function update(id, user) {
   const parsedId = ObjectId(id);
   const userCollection = await users();
 
-  const userName = await userCollection.findOne({ username: user.username });
-  if (userName.username === user.username) throw "Data/Users.js/update: Error, username already taken!";
-  const userMail = await userCollection.findOne({ email: user.email });
-  if (userMail.email === user.email) throw "Data/Users.js/update: Error, email already taken!";
-
   const updateInfo = await userCollection.updateOne(
     { _id: parsedId },
     { $set: user }

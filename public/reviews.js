@@ -7,6 +7,7 @@
   error = $('#error');
   let formCounter = 1;
   let commentCounter = 1;
+  let commentListCounter = 1;
   // commentList = $('#commentList');
   // commentForm = $('#commentForm');
   // commentContent = $('#comment');
@@ -34,6 +35,7 @@
       let label = $('<label></label>').text('Post a Comment');
       // let reviewIdInput = $('<input hidden>').attr('id', 'reviewIdInput').attr('value', 'reviewId');
       let commentInput = $('<input>').attr('id', 'comment' + commentCounter);
+      let hiddenInput = $('<input>').attr('id', 'hidden' + commentCounter).attr('hidden', true).val(rev._id);
       commentCounter++;
       commentInput.attr('name', 'comment');
       commentInput.attr('type', 'text');
@@ -44,13 +46,15 @@
       commentButton.attr('type', 'submit');
 
       form.append(label);
+      form.append(hiddenInput);
       form.append(commentButton);
       if (restaurant.authenticated) {
         newReview.append(form);
       }
-      let commentList = $('<div id="commentList' + formCounter + '"></div>');
-      newReview.append(commentList);
 
+
+      let commentList = $('<div id="commentList' + commentListCounter + '"></div>');
+      newReview.append(commentList);
       for (const comm of rev.comments) {
         let newComment = $('<div></div>');
         let a = $('<a></a>').text(comm.username);
@@ -60,18 +64,19 @@
         newComment.append($('<p></p>').text(comm.comment));
         commentList.append(newComment);
       }
-
+      
       // let commentList = $('#commentList' + formCounter);
       form.submit((eve) => {
         eve.preventDefault();
         $.ajax({
-          url: '/restaurants/' + restaurant._id + '/reviews/' + rev._id + '/comments',
+          url: '/restaurants/' + restaurant._id + '/reviews/' + hiddenInput.val() + '/comments',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
           },
           method: 'POST',
           data: form.serializeArray()
         }).then((returnedComment) => {
+          // location.reload();
           let newComment = $('<div></div>');
           let a = $('<a></a>').text(returnedComment.username);
           a.attr('href', "/users/" + returnedComment.username)
@@ -83,6 +88,7 @@
         });
       });
       reviewList.append(newReview);
+      commentListCounter++;
       formCounter++;
     }
   });

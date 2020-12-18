@@ -31,7 +31,17 @@ router.get('/:id', async (req, res) => {
         restaurant.reviews = allReviews.filter(review => review.restaurantId === restaurant._id);
         for (review of restaurant.reviews) {
             review.user = await userData.getById(review.userId);
-            if (req.session.user._id == review.user._id) review.currentUser = true;
+            let newComments = [];
+            review.comments.forEach(async commentId => {
+                let commData = await commentData.getCommentById(commentId);
+                let us = await userData.getById(commData.userId);
+                commData.username = us.username;
+                newComments.push(commData);
+            });
+            review.comments = newComments;
+            if (req.session.user) {
+                if (req.session.user._id == review.user._id) review.currentUser = true;
+            }
         }
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });
@@ -62,9 +72,24 @@ router.get('/:id/json', async (req, res) => {
         restaurant = await restaurantData.getRestaurantById(id);
         const allReviews = await reviewData.getAllReviews();
         restaurant.reviews = allReviews.filter(review => review.restaurantId === restaurant._id);
+        let finalReviews = [];
         for (review of restaurant.reviews) {
             review.user = await userData.getById(review.userId);
-            if (req.session.user._id == review.user._id) review.currentUser = true;
+            let newComments = [];
+            review.comments.forEach(async commentId => {
+                let commData = await commentData.getCommentById(commentId);
+                let us = await userData.getById(commData.userId);
+                commData.username = us.username;
+                newComments.push(commData);
+                console.log('added comment to review')
+                console.log(commData);
+            });
+            console.log('newCommnets is')
+            console.log(newComments);
+            review.comments = newComments;
+            if (req.session.user) {
+                if (req.session.user._id == review.user._id) review.currentUser = true;
+            }
         }
     } catch (e) {
         res.status(404).json({ error: 'restaurant not found!' });

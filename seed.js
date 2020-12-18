@@ -108,8 +108,8 @@ async function main() {
         serviceModes: ["Takeaway"],
         location: {
             address: "2 Castle Point Terrace",
-            latitude: 52.1,
-            longitude: 45.9
+            latitude: 50.45,
+            longitude: 45.50
         },
         nearByRestaurants: [restaurant1._id.toString()],
         hours: { "Sunday": "9:00 AM - 9:00 PM", "Monday": "5:00 AM - 9:00 PM", "Tuesday": "8:00 AM - 9:00 PM", "Wednesday": "8:00 AM - 6:00 PM", "Thursday": "9:00 AM - 9:00 PM", "Friday": "8:00 AM - 6:00 PM", "Saturday": "10:00 AM - 6:00 PM" },
@@ -148,8 +148,8 @@ async function main() {
         serviceModes: ["Dine-in", "Takeaway"],
         location: {
             address: "512 Washington Street",
-            latitude: 53.01,
-            longitude: 44.39
+            latitude: 50.40,
+            longitude: 45.39
         },
         nearByRestaurants: [restaurant1._id.toString()],
         hours: { "Sunday": "9:00 AM - 9:00 PM", "Monday": "5:00 AM - 9:00 PM", "Tuesday": "8:00 AM - 9:00 PM", "Wednesday": "8:00 AM - 6:00 PM", "Thursday": "9:00 AM - 9:00 PM", "Friday": "8:00 AM - 6:00 PM", "Saturday": "10:00 AM - 6:00 PM" },

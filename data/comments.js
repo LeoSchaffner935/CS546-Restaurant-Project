@@ -15,7 +15,7 @@ const exportedMethods = {
             throw 'Invalid id provided';
         }
         const commentCollection = await comments();
-        const allComments = await commentCollection.find({ commenter: { $eq: id } }).toArray();
+        const allComments = await commentCollection.find({ userId: { $eq: id } }).toArray();
         if (!allComments) {
             throw "No comments in system";
         }
@@ -41,7 +41,7 @@ const exportedMethods = {
     //Add a comment
     async addComment(comment) {
         if (!comment.userId || typeof comment.userId !== "string" || !comment.userId.trim()) {
-            throw 'Commenter must be a non-empty string';
+            throw 'userId must be a non-empty string';
         }
         if (!comment.reviewId || typeof comment.reviewId !== "string" || !comment.reviewId.trim()) {
             throw 'Valid Review Id not supplied';

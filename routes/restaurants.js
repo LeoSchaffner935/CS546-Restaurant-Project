@@ -81,11 +81,7 @@ router.get('/:id/json', async (req, res) => {
                 let us = await userData.getById(commData.userId);
                 commData.username = us.username;
                 newComments.push(commData);
-                console.log('added comment to review')
-                console.log(commData);
             });
-            console.log('newCommnets is')
-            console.log(newComments);
             review.comments = newComments;
             if (req.session.user) {
                 if (req.session.user._id == review.user._id) review.currentUser = true;
@@ -608,7 +604,6 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
         res.status(400).json({ error: 'reviewId needed to add comments!' });
         return;
     }
-    console.log(req.params.restaurantId);
     try {
         await restaurantData.getRestaurantById(req.params.restaurantId);
     } catch (e) {
@@ -636,7 +631,6 @@ router.post('/:restaurantId/reviews/:reviewId/comments', async (req, res) => {
     try {
         comment = await commentData.addComment(comment);
     } catch (e) {
-        console.log(e);
         res.status(400).json({ error: 'Failed to add comment!' });
         return;
     }

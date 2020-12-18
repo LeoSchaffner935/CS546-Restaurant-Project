@@ -85,12 +85,10 @@ async function update(id, user) {
 }
 
 async function addReviewToUser(userId, reviewId) {
-  console.log('inside addReviewToUser function');
   if (!userId || typeof userId !== "string" || !userId.trim()) throw 'Data/Users.js/addReviewToUser: Invalid userId!';
   if (!reviewId || typeof reviewId !== "string" || !reviewId.trim()) throw 'Data/Users.js/addReviewToUser: Invalid reviewId!';
   const parsedId = ObjectId(userId);
   const userCollection = await users();
-  console.log(parsedId);
   await userCollection.updateOne({ _id: parsedId }, { $addToSet: { reviews: reviewId } });
 }
 

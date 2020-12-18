@@ -20,7 +20,6 @@
     dataType: 'json'
   }).then((restaurant) => {
     for (rev of restaurant.reviews) {
-      console.log(rev);
       let newReview = $('<div></div>');
       let a = $('<a></a>').text(rev.user.username);
       a.attr('href', "/users/" + rev.user.username)
@@ -54,7 +53,6 @@
       // let commentList = $('#commentList' + formCounter);
       form.submit((eve) => {
         eve.preventDefault();
-        console.log($('#comment' + commentCounter).val());
         $.ajax({
           url: '/restaurants/' + restaurant._id + '/reviews/' + rev._id + '/comments',
           headers: {
@@ -63,7 +61,6 @@
           method: 'POST',
           data: form.serializeArray()
         }).then((returnedComment) => {
-          console.log(returnedComment);
           let newComment = $('<div></div>');
           let a = $('<a></a>').text(returnedComment.username);
           a.attr('href', "/users/" + returnedComment.username)
@@ -109,7 +106,6 @@
       error.show();
     }
     else {
-      console.log($('#restaurantId').val());
       let requestConfig = {
         method: 'POST',
         url: '/restaurants/' + $('#restaurantId').val() + '/reviews',
@@ -119,7 +115,6 @@
         data: $('#reviewForm').serializeArray()
       };
       $.ajax(requestConfig).then(function (addedReview) {
-        console.log(rev);
         let newReview = $('<div></div>');
         let a = $('<a></a>').text(addedReview.username);
         a.attr('href', "/users/" + addedReview.username)
@@ -158,7 +153,6 @@
             method: 'POST',
             data: form.serializeArray()
           }).then((returnedComment) => {
-            console.log(returnedComment);
             let newComment = $('<div></div>');
             let a = $('<a></a>').text(returnedComment.username);
             a.attr('href', "/users/" + returnedComment.username)

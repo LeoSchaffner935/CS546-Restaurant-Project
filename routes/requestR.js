@@ -33,7 +33,6 @@ router.post('/', async (req, res) => {
         res.status(400).json({ error: 'location.address must be provided to create a restaurant' });
         return;
     }
-    console.log(restaurantInfo);
     let newRestaurant = {
         name: restaurantInfo.restaurantName,
         owner: restaurantInfo.owner,

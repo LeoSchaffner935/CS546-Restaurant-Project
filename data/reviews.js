@@ -32,8 +32,6 @@ async function addReview(review) {
 
     const newInsertInfo = await reviewCollection.insertOne(review);
     if (newInsertInfo.insertedCount === 0) throw "Insertion failed";
-    console.log(newInsertInfo.insertedId.toString());
-    console.log(review.userId);
     await users.addReviewToUser(review.userId, newInsertInfo.insertedId.toString());
     await restaurants.addReviewToRestaurant(review.restaurantId, newInsertInfo.insertedId.toString());
     return await this.getReviewById(newInsertInfo.insertedId.toString());

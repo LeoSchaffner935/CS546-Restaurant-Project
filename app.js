@@ -25,9 +25,40 @@ app.use(session({
 );
 
 app.use('/private', (req, res, next) => {
-  if (!req.session.user) return res.status(403).redirect('/login', {
-    error: 'Unauthorized!'
-  });
+  // if (!req.session.user) return res.status(403).redirect('/login', {
+  //   error: 'Unauthorized!'
+  // });
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/requestR', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/users/:username', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/restaurants/:id/reviews', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/restaurants/:id/reviews/:reviewId', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/restaurants/:restaurantId/reviews/:reviewId/comments', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
+  else next();
+});
+
+app.use('/restaurants/:id/reviews', (req, res, next) => {
+  if (!req.session.user) return res.redirect('/login');
   else next();
 });
 

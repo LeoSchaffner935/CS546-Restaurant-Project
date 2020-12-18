@@ -95,6 +95,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
     }
     $.ajax(requestConfig).then(function (res) {
         if (res) {
+          if (res.nearByRestaurants && Array.isArray(res.nearByRestaurants)) {
             for (let restaurant of res.nearByRestaurants) {
                 let requestConfig2 = {
                     method: "GET",
@@ -134,6 +135,7 @@ function calculateDistance(lat1, lng1, lat2, lng2) {
                     }
                 });
             }
+          }
         } else {
             console.log("Failed to get restaurant");
         }

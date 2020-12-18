@@ -180,33 +180,12 @@
     }
   });
 
-  // commentForm.submit(function (event) {
-  //   event.preventDefault();
-  //   let requestConfig = {
-  //     method: 'POST',
-  //     url: '/restaurants/' + $('#restaurantId').val() + '/reviews/' + $('#reviewId').val() + '/comments',
-  //     headers: {
-  //       'Content-Type': 'application/x-www-form-urlencoded'
-  //     },
-  //     data: commentForm.serializeArray()
-  //   };
-  //   $.ajax(requestConfig).then(function (addedComment) {
-  //     let newComment = $('<div></div>');
-  //     let a = $('<a></a>').text(addedComment.userId);
-  //     a.attr('href', "/users/" + addedComment.userId)
-  //     newComment.append(a);
-  //     newComment.append($('<p></p>').text(new Date()));
-  //     newComment.append($('<p></p>').text(commentContent));
-  //     commentList.append(newComment);
-  //   });
-  // });
-
   setTimeout(function () {
     alert("Session about to expire");
-  }, 80000);
+  }, 800000);
 
   setTimeout(function () {
     location.href = '/login';
-  }, 100000);
+  }, 1000000);
 
 })(window.jQuery);  

@@ -50,6 +50,17 @@
       }
       let commentList = $('<div id="commentList' + formCounter + '"></div>');
       newReview.append(commentList);
+
+      for (const comm of rev.comments) {
+        let newComment = $('<div></div>');
+        let a = $('<a></a>').text(comm.username);
+        a.attr('href', "/users/" + comm.username)
+        newComment.append(a);
+        newComment.append($('<p></p>').text(comm.date));
+        newComment.append($('<p></p>').text(comm.comment));
+        commentList.append(newComment);
+      }
+
       // let commentList = $('#commentList' + formCounter);
       form.submit((eve) => {
         eve.preventDefault();
@@ -189,13 +200,13 @@
   //     commentList.append(newComment);
   //   });
   // });
-  
-  setTimeout(function(){
-    alert("Session about to expire");
- },80000);
 
- setTimeout(function(){
-  location.href = '/login';
-},100000);
+  setTimeout(function () {
+    alert("Session about to expire");
+  }, 80000);
+
+  setTimeout(function () {
+    location.href = '/login';
+  }, 100000);
 
 })(window.jQuery);  

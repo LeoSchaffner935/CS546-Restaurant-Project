@@ -76,12 +76,12 @@ router.get('/:id/json', async (req, res) => {
         for (review of restaurant.reviews) {
             review.user = await userData.getById(review.userId);
             let newComments = [];
-            review.comments.forEach(async commentId => {
+            for(const commentId of review.comments) {
                 let commData = await commentData.getCommentById(commentId);
                 let us = await userData.getById(commData.userId);
                 commData.username = us.username;
                 newComments.push(commData);
-            });
+            }
             review.comments = newComments;
             if (req.session.user) {
                 if (req.session.user._id == review.user._id) review.currentUser = true;

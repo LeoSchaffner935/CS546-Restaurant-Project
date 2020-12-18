@@ -217,7 +217,7 @@ async function main() {
     }
     restaurant8 = await restaurants.addRestaurant(restaurant8);  
 
-    let review1 = {title:"Good", restaurantId:restaurant1._id.toString(), userId:user1._id.toString(), rating:5, content:"good restaurant", tags:["delicious"], comments: ['comment 1', 'comment 2']};
+    let review1 = {title:"Good", restaurantId:restaurant1._id.toString(), userId:user1._id.toString(), rating:5, content:"good restaurant", tags:["delicious"], comments: []};
     review1 = await reviews.addReview(review1);
     let review4 = {title:"Good", restaurantId: restaurant1._id.toString(), userId:user2._id.toString(), rating:4, content:"this was a great place to eat, service was good.", tags:["delicious"], comments: []}
     review4 = await reviews.addReview(review4);
